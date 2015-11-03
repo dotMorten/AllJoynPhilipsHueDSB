@@ -1,7 +1,7 @@
 ## AllJoyn Device Service Bridge for Philips Hue
 
 This bridge acts as a Device Service Bridge between Philips Hue and AllJoyn Lighting Service Framework. 
-The project contains a Headed Windows App for testing on local desktop, and a Headless startup task for running on IoT Core Framework.
+The project contains a Headed Windows App for testing on local desktop, and a Headless startup task for running on Windows IoT Core (Raspberry PI2, Minnowboard Max, Dragonboard etc).
 
 The AllJoyn bridge can handle any number of Hue bridges, and will remember the registration for each of them across sessions, so you don't need to re-link the process to the bridge again.
 
