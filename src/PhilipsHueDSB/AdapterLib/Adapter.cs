@@ -40,7 +40,7 @@ namespace AdapterLib
             Windows.ApplicationModel.PackageId packageId = package.Id;
             Windows.ApplicationModel.PackageVersion versionFromPkg = packageId.Version;
 
-            this.Vendor = "AtHome";
+            this.Vendor = "Morten Nielsen";
             this.AdapterName = "Philips Hue DSB";
 
             // the adapter prefix must be something like "com.mycompany" (only alpha num and dots)

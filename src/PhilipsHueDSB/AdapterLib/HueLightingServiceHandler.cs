@@ -55,7 +55,6 @@ namespace AdapterLib
             LampDetails_MinTemperature = OEM_LS_COLOR_TEMPERATURE_MIN;
             LampDetails_MinVoltage = 100;
             LampDetails_Model = 1;
-            //LampDetails_Model = light.ModelId;
             LampDetails_Type = (uint)AdapterLib.LsfEnums.DeviceType.TYPE_LAMP;
             LampDetails_VariableColorTemp = lightType > 2;
             //LampDetails_Version = light.SoftwareVersion;
