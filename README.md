@@ -1,4 +1,4 @@
-# AllJoyn Device Service Bridge for Philips Hue
+## AllJoyn Device Service Bridge for Philips Hue
 
 This bridge acts as a Device Service Bridge between Philips Hue and AllJoyn Lighting Service Framework. 
 The project contains a Headed Windows App for testing on local desktop, and a Headless startup task for running on IoT Core Framework.
