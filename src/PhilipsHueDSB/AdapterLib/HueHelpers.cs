@@ -10,6 +10,19 @@ using Windows.Data.Xml.Dom;
 
 namespace AdapterLib
 {
+    //Hue Client that adds the serial number for the bridge that the bulb belongs to
+    internal class LocalHueClient2 : Q42.HueApi.LocalHueClient
+    {
+        public LocalHueClient2(string ip, string bridgeSerial) : base(ip)
+        {
+            BridgeSerial = bridgeSerial;
+        }
+        public LocalHueClient2(string ip, string appKey, string bridgeSerial) : base(ip, appKey)
+        {
+            BridgeSerial = bridgeSerial;
+        }
+        public string BridgeSerial { get; }
+    }
     internal class HueBridgeDescription
     {
         XmlDocument _description;
@@ -72,27 +85,6 @@ namespace AdapterLib
                 clients.Add(new HueBridgeDescription(descriptionDoc, ip));
             }
             return clients;
-        }
-
-        private HueClient CreateClient(string ip, string applicationKey)
-        {
-            LocalHueClient client = new LocalHueClient(ip);
-            client.Initialize(applicationKey);
-            return client;
-        }
-        private async Task<HueClient> RegisterClientAsync(string ip)
-        {
-            LocalHueClient client = new LocalHueClient(ip);
-            var applicationKey = await client.RegisterAsync(GetApplicationName(), "minwinpc").ConfigureAwait(false);
-            client.Initialize(applicationKey);
-            return client;
-        }
-
-        private static string GetApplicationName()
-        {
-            Windows.ApplicationModel.Package package = Windows.ApplicationModel.Package.Current;
-            Windows.ApplicationModel.PackageId packageId = package.Id;
-            return package.Id.Name;
         }
     }
 }

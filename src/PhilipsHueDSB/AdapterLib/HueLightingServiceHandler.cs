@@ -20,8 +20,9 @@ namespace AdapterLib
         private const int OEM_LS_COLOR_TEMPERATURE_MIN = 2700;
         private const int OEM_LS_COLOR_TEMPERATURE_MAX = 9000;
 
-        Q42.HueApi.Light _light;
-        Q42.HueApi.HueClient _client;
+        private readonly Q42.HueApi.Light _light;
+        private readonly Q42.HueApi.HueClient _client;
+
         public HueLightingServiceHandler(Q42.HueApi.HueClient client, Q42.HueApi.Light light)
         {
             //Doc on supported lights:

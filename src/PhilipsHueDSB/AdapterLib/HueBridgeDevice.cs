@@ -31,9 +31,10 @@ namespace AdapterLib
     }
     internal class HueBridgeDevice : AdapterDevice
     {
-        private Q42.HueApi.HueClient _client;
-        private List<HueBulbDevice> _devices = new List<HueBulbDevice>();
-        HueBridgeDescription _description;
+        private readonly Q42.HueApi.HueClient _client;
+        private readonly List<HueBulbDevice> _devices = new List<HueBulbDevice>();
+        private readonly HueBridgeDescription _description;
+        private readonly Windows.UI.Xaml.DispatcherTimer CheckForLightsTimer;
 
         public HueBridgeDevice(Q42.HueApi.HueClient client, HueBridgeDescription desc) : base(
             desc.FriendlyName, desc.Manufacturer, desc.ModelName, "", desc.SerialNumber, desc.ModelDescription)
@@ -45,10 +46,11 @@ namespace AdapterLib
             EnableJoinMethod.InvokeAction = Link;
             Methods.Add(EnableJoinMethod);
 
-            var UpdateMethod = new AdapterMethod("Update", "Looks for any removed or added lights", 0);
-            UpdateMethod.InvokeAction = UpdateDeviceList;
-            Methods.Add(UpdateMethod);
+            //var UpdateMethod = new AdapterMethod("Update", "Looks for any removed or added lights", 0);
+            //UpdateMethod.InvokeAction = UpdateDeviceList;
+            //Methods.Add(UpdateMethod);
 
+            //Check if bridge is already linked and registered
             var container = ApplicationData.Current.LocalSettings.CreateContainer("RegisteredHueBridges", ApplicationDataCreateDisposition.Always);
             if(container.Values.ContainsKey(desc.SerialNumber))
             {
@@ -61,6 +63,14 @@ namespace AdapterLib
             }
             if (desc.IconUri != null)
                 Icon = new AdapterIcon(desc.IconUri.OriginalString);
+
+            CheckForLightsTimer = new Windows.UI.Xaml.DispatcherTimer() { Interval = TimeSpan.FromMinutes(1) };
+            CheckForLightsTimer.Tick += CheckForLightsTimer_Tick;
+        }
+
+        private void CheckForLightsTimer_Tick(object sender, object e)
+        {
+            UpdateDeviceList();
         }
 
         private async void Link()
@@ -91,6 +101,7 @@ namespace AdapterLib
 
         private async void UpdateDeviceList()
         {
+            CheckForLightsTimer.Stop();
             try
             {
                 var lights = (await _client.GetLightsAsync()).ToList();
@@ -104,18 +115,20 @@ namespace AdapterLib
                         NotifyDeviceRemoval?.Invoke(this, device);
                     }
                 }
+                var serial = (_client as LocalHueClient2).BridgeSerial;
                 //Report all newly found lights
                 foreach (var light in lights)
                 {
                     if (!_devices.Where(l => l.Light.UniqueId == light.UniqueId).Any())
                     {
-                        var device = new HueBulbDevice(_client, light);
+                        var device = new HueBulbDevice(_client, light, serial);
                         _devices.Add(device);
                         NotifyDeviceArrival?.Invoke(this, device);
                     }
                 }
             }
             catch { }
+            CheckForLightsTimer.Start();
         }
 
         public event EventHandler<HueBulbDevice> NotifyDeviceArrival;

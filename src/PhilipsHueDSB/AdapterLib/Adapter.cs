@@ -20,6 +20,8 @@ namespace AdapterLib
         private const int DEVICE_REMOVAL_SIGNAL_INDEX = 1;
         private const int DEVICE_REMOVAL_SIGNAL_PARAM_INDEX = 0;
 
+        private readonly Windows.UI.Xaml.DispatcherTimer checkForBridgesTimer;
+
         public string Vendor { get; }
 
         public string AdapterName { get; }
@@ -45,7 +47,7 @@ namespace AdapterLib
 
             // the adapter prefix must be something like "com.mycompany" (only alpha num and dots)
             // it is used by the Device System Bridge as root string for all services and interfaces it exposes
-            this.ExposedAdapterPrefix = "com." + this.Vendor.ToLower();
+            this.ExposedAdapterPrefix = "com.github.dotMorten";
             this.ExposedApplicationGuid = Guid.Parse("{0x07c19f14,0x76c6,0x4d2f,{0xb4,0xd1,0x7d,0x4f,0x89,0x24,0x17,0x36}}");
 
             if (null != package && null != packageId)
@@ -58,7 +60,7 @@ namespace AdapterLib
             }
             else
             {
-                this.ExposedApplicationName = "DeviceSystemBridge";
+                this.ExposedApplicationName = "PhilipsHueDeviceSystemBridge";
                 this.Version = "0.0.0.0";
             }
 
@@ -68,8 +70,6 @@ namespace AdapterLib
                 this.devices = new List<IAdapterDevice>();
                 this.signalListeners = new Dictionary<int, IList<SIGNAL_LISTENER_ENTRY>>();
 
-                //var testDevice = new AdapterDevice("Test Hue device", "Philips", "Awesome Bulb model", "v1.0", "Serial1234", "Just a mock up test bulb");
-
                 //var EnableJoinMethod = new AdapterMethod("Find Hue Bridges", "Searches for new hue bridges", 0);
                 //EnableJoinMethod.InvokeAction = LoadBridges;
 
@@ -78,9 +78,14 @@ namespace AdapterLib
 
                 LoadBridges();
 
-                //TODO: Check for bridges on internal
+                checkForBridgesTimer = new Windows.UI.Xaml.DispatcherTimer()
+                {
+                    Interval = TimeSpan.FromMinutes(5)
+                };
+                checkForBridgesTimer.Tick += (s, e) => LoadBridges();
+                checkForBridgesTimer.Start();
             }
-            catch (OutOfMemoryException ex)
+            catch (OutOfMemoryException)
             {
                 throw;
             }
@@ -93,15 +98,34 @@ namespace AdapterLib
                 var bridges = await HueHelpers.FindHueBridges();
                 foreach (var bridgeInfo in bridges)
                 {
-                    Q42.HueApi.LocalHueClient client = new Q42.HueApi.LocalHueClient(bridgeInfo.Ip);
-                    //var config = await client.GetConfigAsync();
-                    //var bridge = await client.GetBridgeAsync();
+                    if (this.devices.OfType<HueBridgeDevice>().Any(b => b.SerialNumber == bridgeInfo.SerialNumber))
+                        continue; //Already known bridge
+                    LocalHueClient2 client = new LocalHueClient2(bridgeInfo.Ip, bridgeInfo.SerialNumber);
                     var bridgeDevice = new HueBridgeDevice(client, bridgeInfo);
                     this.devices.Add(bridgeDevice);
                     bridgeDevice.NotifyDeviceArrival += BridgeDevice_NotifyDeviceArrival;
                     bridgeDevice.NotifyDeviceRemoval += BridgeDevice_NotifyDeviceRemoval;
                     this.NotifyDeviceArrival(bridgeDevice);
                 }
+                //Check if any bridges were lost
+                foreach(var bridgeDevice in this.devices.OfType<HueBridgeDevice>().ToArray())
+                {
+                    if (bridges.Any(b => b.SerialNumber == bridgeDevice.SerialNumber))
+                        continue;
+                    //Remove all bulbs on the bridge
+                    var bulbsOnBridge = this.devices.OfType<HueBulbDevice>().Where(b => b.BridgeSerialNumber == bridgeDevice.SerialNumber).ToArray();
+                    foreach(var bulb in bulbsOnBridge)
+                    {
+                        this.devices.Remove(bulb);
+                        this.NotifyDeviceRemoval(bulb);
+                    }
+                    //Remove the bridge
+                    bridgeDevice.NotifyDeviceArrival -= BridgeDevice_NotifyDeviceArrival;
+                    bridgeDevice.NotifyDeviceRemoval -= BridgeDevice_NotifyDeviceRemoval;
+                    this.devices.Remove(bridgeDevice);
+                    this.NotifyDeviceRemoval(bridgeDevice);
+                }
+
             }
             catch(System.Exception ex)
             {
