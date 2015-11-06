@@ -156,7 +156,7 @@ namespace AdapterLib
             set
             {
                 var command = new LightCommand();
-                command.Hue = (int)(value / 365d * 65535);
+                command.Hue = (int)(value / 360d * 65535);
                 _client.SendCommandAsync(command, new[] { _light.Id });
                 _light.State.Hue = (int)value;
             }
