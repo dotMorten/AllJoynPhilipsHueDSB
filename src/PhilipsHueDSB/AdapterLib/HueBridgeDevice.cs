@@ -35,6 +35,7 @@ namespace AdapterLib
         private readonly List<HueBulbDevice> _devices = new List<HueBulbDevice>();
         private readonly HueBridgeDescription _description;
         private System.Threading.Timer CheckForLightsTimer;
+        private AdapterMethod EnableJoinMethod;
 
         public HueBridgeDevice(Q42.HueApi.HueClient client, HueBridgeDescription desc) : base(
             desc.FriendlyName, desc.Manufacturer, desc.ModelName, "", desc.SerialNumber, desc.ModelDescription)
@@ -42,7 +43,7 @@ namespace AdapterLib
             _client = client;
             _description = desc;
 
-            var EnableJoinMethod = new AdapterMethod("Link", "Puts the adapter into join mode", 0);
+            EnableJoinMethod = new AdapterMethod("Link", "Puts the adapter into join mode", 0);
             EnableJoinMethod.InvokeAction = Link;
             Methods.Add(EnableJoinMethod);
 
@@ -70,26 +71,22 @@ namespace AdapterLib
         {
             try {
                 var c = _client as Q42.HueApi.LocalHueClient;
-                var applicationKey = await c.RegisterAsync(GetApplicationName(), "minwinpc").ConfigureAwait(false);
+                var applicationKey = await c.RegisterAsync("AllJoynDSB", "minwinpc").ConfigureAwait(false);
                 if (applicationKey != null)
                 {
                     var container = ApplicationData.Current.LocalSettings.CreateContainer("RegisteredHueBridges", ApplicationDataCreateDisposition.Always);
                     container.Values[_description.SerialNumber] = applicationKey;
                     c.Initialize(applicationKey);
                     UpdateDeviceList();
+                    EnableJoinMethod.SetResult(0);
                 }
+                EnableJoinMethod.SetResult(2);
             }
-            catch
+            catch (System.Exception ex)
             {
-
+                System.Diagnostics.Debug.WriteLine(ex.Message);
+                EnableJoinMethod.SetResult(1);
             }
-        }
-
-        private static string GetApplicationName()
-        {
-            Windows.ApplicationModel.Package package = Windows.ApplicationModel.Package.Current;
-            Windows.ApplicationModel.PackageId packageId = package.Id;
-            return package.Id.Name;
         }
 
         private async void UpdateDeviceList()
