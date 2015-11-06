@@ -69,9 +69,11 @@ namespace AdapterLib
 
         private async void Link()
         {
-            try {
+            try
+            {
                 var c = _client as Q42.HueApi.LocalHueClient;
-                var applicationKey = await c.RegisterAsync("AllJoynDSB", "minwinpc").ConfigureAwait(false);
+                var devicename = Windows.Networking.Proximity.PeerFinder.DisplayName;
+                var applicationKey = await c.RegisterAsync("AllJoynDSB", devicename).ConfigureAwait(false);
                 if (applicationKey != null)
                 {
                     var container = ApplicationData.Current.LocalSettings.CreateContainer("RegisteredHueBridges", ApplicationDataCreateDisposition.Always);
@@ -80,7 +82,10 @@ namespace AdapterLib
                     UpdateDeviceList();
                     EnableJoinMethod.SetResult(0);
                 }
-                EnableJoinMethod.SetResult(2);
+                else
+                {
+                    EnableJoinMethod.SetResult(2);
+                }
             }
             catch (System.Exception ex)
             {
