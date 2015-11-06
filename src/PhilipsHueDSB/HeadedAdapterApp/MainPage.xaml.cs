@@ -1,10 +1,14 @@
-﻿using System;
+﻿using AdapterLib;
+using BridgeRT;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.System.Threading;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -22,9 +26,25 @@ namespace HeadedAdapterApp
     /// </summary>
     public sealed partial class MainPage : Page
     {
+
         public MainPage()
         {
             this.InitializeComponent();
+            CheckBridgeStatus();
+        }
+
+        private async void CheckBridgeStatus()
+        {
+            status.Text = "Starting up bridge...";
+            try
+            {
+                await ((App)App.Current).startupTask;
+                status.Text = "Bridge Successfully Initialized";
+            }
+            catch(System.Exception ex)
+            {
+                status.Text = "Bridge failed to initialize:\n" + ex.Message;
+            }
         }
     }
 }
