@@ -20,7 +20,7 @@ namespace AdapterLib
         private const int DEVICE_REMOVAL_SIGNAL_INDEX = 1;
         private const int DEVICE_REMOVAL_SIGNAL_PARAM_INDEX = 0;
 
-        private readonly Windows.UI.Xaml.DispatcherTimer checkForBridgesTimer;
+        private readonly System.Threading.Timer checkForBridgesTimer;
 
         public string Vendor { get; }
 
@@ -76,14 +76,8 @@ namespace AdapterLib
                 //Create Adapter Signals
                 this.createSignals();
 
-                LoadBridges();
-
-                checkForBridgesTimer = new Windows.UI.Xaml.DispatcherTimer()
-                {
-                    Interval = TimeSpan.FromMinutes(5)
-                };
-                checkForBridgesTimer.Tick += (s, e) => LoadBridges();
-                checkForBridgesTimer.Start();
+                checkForBridgesTimer = new System.Threading.Timer((s)=> { LoadBridges(); }, null,
+                    0, (int)TimeSpan.FromMinutes(5).TotalMilliseconds);
             }
             catch (OutOfMemoryException)
             {

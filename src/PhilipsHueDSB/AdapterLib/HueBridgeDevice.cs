@@ -34,7 +34,7 @@ namespace AdapterLib
         private readonly Q42.HueApi.HueClient _client;
         private readonly List<HueBulbDevice> _devices = new List<HueBulbDevice>();
         private readonly HueBridgeDescription _description;
-        private readonly Windows.UI.Xaml.DispatcherTimer CheckForLightsTimer;
+        private System.Threading.Timer CheckForLightsTimer;
 
         public HueBridgeDevice(Q42.HueApi.HueClient client, HueBridgeDescription desc) : base(
             desc.FriendlyName, desc.Manufacturer, desc.ModelName, "", desc.SerialNumber, desc.ModelDescription)
@@ -64,13 +64,6 @@ namespace AdapterLib
             if (desc.IconUri != null)
                 Icon = new AdapterIcon(desc.IconUri.OriginalString);
 
-            CheckForLightsTimer = new Windows.UI.Xaml.DispatcherTimer() { Interval = TimeSpan.FromMinutes(1) };
-            CheckForLightsTimer.Tick += CheckForLightsTimer_Tick;
-        }
-
-        private void CheckForLightsTimer_Tick(object sender, object e)
-        {
-            UpdateDeviceList();
         }
 
         private async void Link()
@@ -101,7 +94,6 @@ namespace AdapterLib
 
         private async void UpdateDeviceList()
         {
-            CheckForLightsTimer.Stop();
             try
             {
                 var lights = (await _client.GetLightsAsync()).ToList();
@@ -128,7 +120,10 @@ namespace AdapterLib
                 }
             }
             catch { }
-            CheckForLightsTimer.Start();
+            if(CheckForLightsTimer == null)
+                CheckForLightsTimer = new System.Threading.Timer((s) => UpdateDeviceList(), null,
+                    (int)TimeSpan.FromMinutes(1).TotalMilliseconds,
+                    (int)TimeSpan.FromMinutes(1).TotalMilliseconds);
         }
 
         public event EventHandler<HueBulbDevice> NotifyDeviceArrival;
