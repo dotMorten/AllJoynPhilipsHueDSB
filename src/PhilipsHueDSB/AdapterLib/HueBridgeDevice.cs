@@ -37,8 +37,8 @@ namespace AdapterLib
         private System.Threading.Timer CheckForLightsTimer;
         private AdapterMethod EnableJoinMethod;
 
-        public HueBridgeDevice(Q42.HueApi.HueClient client, HueBridgeDescription desc) : base(
-            desc.FriendlyName, desc.Manufacturer, desc.ModelName, "", desc.SerialNumber, desc.ModelDescription)
+        public HueBridgeDevice(Q42.HueApi.HueClient client, HueBridgeDescription desc) : base("PhilipsHue",
+            desc.Manufacturer, desc.ModelName, "", desc.SerialNumber, $"{desc.FriendlyName}\n{desc.ModelDescription} ({desc.ModelNumber})")
         {
             _client = client;
             _description = desc;
