@@ -117,6 +117,7 @@
     <Compile Include="HueBulbDevice.cs" />
     <Compile Include="HueHelpers.cs" />
     <Compile Include="HueLightingServiceHandler.cs" />
+    <Compile Include="HueLampInfo.cs" />
     <Compile Include="LsfEnums.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

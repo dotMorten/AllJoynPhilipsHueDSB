@@ -40,8 +40,6 @@ namespace AdapterLib
         private const double OEM_LS_BRIGHTNESS_MAX = 1.0;
         private const double OEM_LS_SATURATION_MIN = 0;
         private const double OEM_LS_SATURATION_MAX = 1.0;
-        private const int OEM_LS_COLOR_TEMPERATURE_MIN = 2700;
-        private const int OEM_LS_COLOR_TEMPERATURE_MAX = 9000;
 
         private readonly Q42.HueApi.Light _light;
         private readonly Q42.HueApi.HueClient _client;
@@ -51,38 +49,30 @@ namespace AdapterLib
             //Doc on supported lights:
             // http://www.developers.meethue.com/documentation/supported-lights
             _light = light;
+            var info = new HueLampInfo(light);
             var state = light.State;
-            int lightType = 0;
-            if (light.Type == "Extended color light")
-                lightType = 4;
-            else if (light.Type == "Color temperature light")
-                lightType = 3;
-            else if (light.Type == "Color light")
-                lightType = 2;
-            else if(light.Type == "Dimmable light")
-                lightType = 1;
             _client = client;
             
-            LampDetails_Color = lightType > 1;
-            LampDetails_ColorRenderingIndex = 80;
-            LampDetails_Dimmable = true;
+            LampDetails_Color = info.SupportsColor;
+            LampDetails_ColorRenderingIndex = info.ColorRenderingIndex;
+            LampDetails_Dimmable = info.IsDimmable;
             LampDetails_HasEffects = false;
-            LampDetails_IncandescentEquivalent = 60;
-            LampDetails_LampBaseType = (uint)AdapterLib.LsfEnums.BaseType.BASETYPE_E26;
-            LampDetails_LampBeamAngle = 160;
+            LampDetails_IncandescentEquivalent = info.IncandescentEquivalent;
+            LampDetails_LampBaseType = (uint)info.BaseType;
+            LampDetails_LampBeamAngle = info.LampBeamAngle;
             LampDetails_LampID = light.Id;
-            LampDetails_LampType = (uint)AdapterLib.LsfEnums.LampType.LAMPTYPE_A19;
+            LampDetails_LampType = (uint) info.LampType;
             LampDetails_Make = (uint)AdapterLib.LsfEnums.LampMake.MAKE_OEM1;
-            LampDetails_MaxLumens = 620;
-            LampDetails_MaxTemperature = OEM_LS_COLOR_TEMPERATURE_MAX;
+            LampDetails_MaxLumens = info.MaxLumens;
+            LampDetails_MaxTemperature = info.MaxTemperature;
             LampDetails_MaxVoltage = 120;
-            LampDetails_MinTemperature = OEM_LS_COLOR_TEMPERATURE_MIN;
+            LampDetails_MinTemperature = info.MinTemperature;
             LampDetails_MinVoltage = 100;
             LampDetails_Model = 1;
             LampDetails_Type = (uint)AdapterLib.LsfEnums.DeviceType.TYPE_LAMP;
-            LampDetails_VariableColorTemp = lightType > 2;
-            //LampDetails_Version = light.SoftwareVersion;
-            LampDetails_Wattage = 9;
+            LampDetails_VariableColorTemp = info.SupportsTemperature;
+            LampDetails_Version = 1;
+            LampDetails_Wattage = info.Wattage;
         }
         public bool LampDetails_Color
         {
