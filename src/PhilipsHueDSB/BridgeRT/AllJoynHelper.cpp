@@ -31,8 +31,22 @@ AllJoynHelper::AllJoynHelper()
 {
 }
 
-void AllJoynHelper::BuildBusObjectName(_In_ Platform::String ^inString, _Inout_ std::string &builtName)
+string AllJoynHelper::TrimChar(const string& inString, char ch)
 {
+    auto posL = inString.find_first_not_of(ch);
+    if (posL == string::npos)
+    {
+        posL = 0;
+    }
+
+    auto posR = inString.find_last_not_of(ch);
+
+    return inString.substr(posL, posR - posL + 1);
+}
+
+void AllJoynHelper::EncodeBusObjectName(_In_ Platform::String ^inString, _Inout_ std::string &builtName)
+{
+    builtName.clear();
     // only use a-z A-Z 0-9 char
     // translate ' ' into '_'
     for (size_t index = 0; index < inString->Length(); index++)
@@ -51,10 +65,13 @@ void AllJoynHelper::BuildBusObjectName(_In_ Platform::String ^inString, _Inout_ 
             builtName += '/';
         }
     }
+    //Trim '/' from start and end
+    builtName = TrimChar(builtName, '/');
 }
 
-void AllJoynHelper::BuildPropertyOrMethodOrSignalName(_In_ Platform::String ^inString, _Inout_ std::string &builtName)
+void AllJoynHelper::EncodePropertyOrMethodOrSignalName(_In_ Platform::String ^inString, _Inout_ std::string &builtName)
 {
+    builtName.clear();
     // 1st char must be upper case => default to true
     bool upperCaseNextChar = true;
     bool is1stChar = true;
@@ -100,6 +117,9 @@ void AllJoynHelper::EncodeStringForInterfaceName(Platform::String ^ inString, st
             encodeString += char(origChar);
         }
     }
+
+    //Trim '.' from start and end
+    encodeString = TrimChar(encodeString, '.');
 }
 
 void AllJoynHelper::EncodeStringForServiceName(_In_ Platform::String ^inString, _Out_ std::string &encodeString)
@@ -141,7 +161,7 @@ void AllJoynHelper::EncodeStringForRootServiceName(Platform::String ^ inString, 
     {
         wchar_t origChar = inString->Data()[index];
         if (::isalpha(origChar) ||
-            '.' == char(origChar))
+            ('.' == char(origChar)))
         {
             encodeString += char(origChar);
             currentChar = char(origChar);
@@ -157,6 +177,8 @@ void AllJoynHelper::EncodeStringForRootServiceName(Platform::String ^ inString, 
             currentChar = char(origChar);
         }
     }
+    //Trim '.' from start and end
+    encodeString = TrimChar(encodeString, '.');
 }
 
 void AllJoynHelper::EncodeStringForAppName(Platform::String ^ inString, std::string & encodeString)

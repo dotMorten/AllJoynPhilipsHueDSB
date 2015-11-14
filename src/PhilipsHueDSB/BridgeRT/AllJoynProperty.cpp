@@ -115,7 +115,7 @@ QStatus AllJoynProperty::SetName(Platform::String ^name)
         goto leave;
     }
 
-    AllJoynHelper::BuildPropertyOrMethodOrSignalName(name, m_exposedName);
+    AllJoynHelper::EncodePropertyOrMethodOrSignalName(name, m_exposedName);
     if (!m_parent->IsAJPropertyNameUnique(m_exposedName))
     {
         // append unique id

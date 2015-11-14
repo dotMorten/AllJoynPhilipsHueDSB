@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,17 +13,25 @@ namespace AdapterLib
         byte[] _image = null;
         public AdapterIcon(string url)
         {
-            Url = url;
-        }
-        public string MimeType
-        {
-            get { return "image/png"; }
+            if (url.StartsWith("ms-appx:///"))
+            {
+                var s = Windows.Storage.Streams.RandomAccessStreamReference.CreateFromUri(new Uri(url)).OpenReadAsync().AsTask();
+                s.Wait();
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    s.Result.AsStreamForRead().CopyTo(ms);
+                    _image = ms.ToArray();
+                }
+            }
+            else
+            {
+                Url = url;
+            }
         }
 
-        public string Url
-        {
-            get; private set;
-        }
+        public string MimeType { get; } = "image/png";
+
+        public string Url { get; } = "";
 
         public byte[] GetImage()
         {
@@ -62,9 +71,9 @@ namespace AdapterLib
                     UpdateDeviceList();
                 }
             }
-            if (desc.IconUri != null)
-                Icon = new AdapterIcon(desc.IconUri.OriginalString);
-
+            //if (desc.IconUri != null)
+            //    Icon = new AdapterIcon(desc.IconUri.OriginalString);
+                Icon = new AdapterIcon("ms-appx:///AdapterLib/Icons/PhilipsHueIcon.png");
         }
 
         private async void Link()

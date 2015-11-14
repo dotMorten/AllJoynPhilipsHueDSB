@@ -50,6 +50,7 @@ DeviceProperty::~DeviceProperty()
 QStatus DeviceProperty::Initialize(IAdapterProperty ^deviceProperty, PropertyInterface *propertyInterface, BridgeDevice ^parent)
 {
     QStatus status = ER_OK;
+    string tempString;
     alljoyn_busobject_callbacks callbacks =
     {
         &DeviceProperty::GetProperty,
@@ -80,8 +81,9 @@ QStatus DeviceProperty::Initialize(IAdapterProperty ^deviceProperty, PropertyInt
     m_parent = parent;
 
     // build bus object path
-    m_AJBusObjectPath = '/';
-    AllJoynHelper::BuildBusObjectName(m_deviceProperty->Name, m_AJBusObjectPath);
+    AllJoynHelper::EncodeBusObjectName(m_deviceProperty->Name, tempString);
+    m_AJBusObjectPath = "/" + tempString;
+
     if (!parent->IsBusObjectPathUnique(m_AJBusObjectPath))
     {
         DWORD id = 0;

@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("AdapterLib")]
+[assembly: AssemblyTitle("Philips Hue - AdapterLib")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("mort5161")]
-[assembly: AssemblyProduct("AdapterLib")]
+[assembly: AssemblyCompany("Morten Nielsen")]
+[assembly: AssemblyProduct("Philips Hue AllJoyn Bridge")]
 [assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

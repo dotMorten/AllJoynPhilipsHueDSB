@@ -50,7 +50,6 @@ ConfigManager::~ConfigManager()
 int32 ConfigManager::Initialize(DsbBridge ^bridge)
 {
     int32 hr = S_OK;
-    AutoLock bridgeLocker(&DsbBridge::SingleInstance()->GetLock(), true);
 
     if (nullptr == bridge)
     {
@@ -72,7 +71,6 @@ Leave:
 int32 ConfigManager::Shutdown()
 {
     int32 hr = S_OK;
-    AutoLock bridgeLocker(&DsbBridge::SingleInstance()->GetLock(), true);
 
     ShutdownAllJoyn();
     m_adapter = nullptr;
@@ -337,7 +335,6 @@ Leave:
 QStatus ConfigManager::InitializeCSPBusObjects()
 {
     QStatus status = ER_OK;
-    AutoLock bridgeLocker(&DsbBridge::SingleInstance()->GetLock(), true);
 
     // init CSP related bus objects if this isn't an update
     //-------------------------------------------------------

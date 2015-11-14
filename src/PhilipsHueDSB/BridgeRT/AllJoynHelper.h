@@ -33,12 +33,13 @@ namespace BridgeRT
         static QStatus GetAdapterObject(_Inout_ IAdapterValue ^adapterValue, _In_ alljoyn_msgarg msgArg, _In_ DeviceMain *deviceMain);
         static QStatus GetSignature(_In_ Windows::Foundation::PropertyType propertyType, _Out_ std::string &signature);
 
-        static void BuildBusObjectName(_In_ Platform::String ^inString, _Inout_ std::string &builtName);
-        static void BuildPropertyOrMethodOrSignalName(_In_ Platform::String ^inString, _Inout_ std::string &builtName);
+        static void EncodeBusObjectName(_In_ Platform::String ^inString, _Inout_ std::string &builtName);
+        static void EncodePropertyOrMethodOrSignalName(_In_ Platform::String ^inString, _Inout_ std::string &builtName);
         static void EncodeStringForInterfaceName(_In_ Platform::String ^inString, _Out_ std::string &encodeString);
         static void EncodeStringForServiceName(_In_ Platform::String ^inString, _Out_ std::string &encodeString);
         static void EncodeStringForRootServiceName(_In_ Platform::String ^inString, _Out_ std::string &encodeString);
         static void EncodeStringForAppName(_In_ Platform::String ^inString, _Out_ std::string &encodeString);
+        static std::string TrimChar(const std::string& inString, char ch);
     };
 }
 
