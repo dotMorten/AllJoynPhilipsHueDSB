@@ -95,7 +95,7 @@ namespace AdapterLib
                     if (this.devices.OfType<HueBridgeDevice>().Any(b => b.SerialNumber == bridgeInfo.SerialNumber))
                         continue; //Already known bridge
                     LocalHueClient2 client = new LocalHueClient2(bridgeInfo.Ip, bridgeInfo.SerialNumber);
-                    var bridgeDevice = new HueBridgeDevice(client, bridgeInfo);
+                    var bridgeDevice = new HueBridgeDevice(client, bridgeInfo, this);
                     this.devices.Add(bridgeDevice);
                     bridgeDevice.NotifyDeviceArrival += BridgeDevice_NotifyDeviceArrival;
                     bridgeDevice.NotifyDeviceRemoval += BridgeDevice_NotifyDeviceRemoval;
@@ -384,6 +384,40 @@ namespace AdapterLib
             {
                 throw;
             }
+        }
+        internal void SignalChangeOfAttributeValue(IAdapterDevice device, IAdapterProperty property, IAdapterAttribute attribute)
+        {
+            // find change of value signal of that end point (end point == bridgeRT device)
+
+            var covSignal = device.Signals.OfType<AdapterSignal>().FirstOrDefault(s => s.Name == Constants.CHANGE_OF_VALUE_SIGNAL);
+            if (covSignal == null)
+            {
+                // no change of value signal
+                return;
+            }
+
+            // set property and attribute param of COV signal
+            // note that 
+            // - ZCL cluster correspond to BridgeRT property 
+            // - ZCL attribute correspond to BridgeRT attribute 
+            var param = covSignal.Params.FirstOrDefault(p => p.Name == Constants.COV__PROPERTY_HANDLE);
+            if (param == null)
+            {
+                // signal doesn't have the expected parameter
+                return;
+            }
+            param.Data = property;
+
+            param = covSignal.Params.FirstOrDefault(p => p.Name == Constants.COV__ATTRIBUTE_HANDLE);
+            if (param == null)
+            {
+                // signal doesn't have the expected parameter
+                return;
+            }
+            param.Data = attribute.Value;
+
+            // signal change of value to BridgeRT
+            NotifySignalListener(covSignal);
         }
 
         private struct SIGNAL_LISTENER_ENTRY

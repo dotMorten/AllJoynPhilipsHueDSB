@@ -181,48 +181,7 @@ namespace AdapterLib
             }
         }
     }
-
-    //
-    // AdapterSignal.
-    // Description:
-    // The class that implements IAdapterSignal from BridgeRT.
-    //
-    class AdapterSignal : IAdapterSignal
-    {
-        // public properties
-        public string Name { get; }
-
-        public IList<IAdapterValue> Params { get; }
-
-        internal AdapterSignal(string ObjectName)
-        {
-            this.Name = ObjectName;
-
-            try
-            {
-                this.Params = new List<IAdapterValue>();
-            }
-            catch (OutOfMemoryException ex)
-            {
-                throw;
-            }
-        }
-
-        internal AdapterSignal(AdapterSignal Other)
-        {
-            this.Name = Other.Name;
-
-            try
-            {
-                this.Params = new List<IAdapterValue>(Other.Params);
-            }
-            catch (OutOfMemoryException ex)
-            {
-                throw;
-            }
-        }
-    }
-
+    
     //
     // AdapterDevice.
     // Description:

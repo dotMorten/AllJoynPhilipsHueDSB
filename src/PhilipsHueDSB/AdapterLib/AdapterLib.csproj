@@ -112,6 +112,7 @@
   <ItemGroup>
     <Compile Include="Adapter.cs" />
     <Compile Include="AdapterDevice.cs" />
+    <Compile Include="AdapterSignal.cs" />
     <Compile Include="HueBridgeDevice.cs" />
     <Compile Include="HueBulbDevice.cs" />
     <Compile Include="HueHelpers.cs" />
