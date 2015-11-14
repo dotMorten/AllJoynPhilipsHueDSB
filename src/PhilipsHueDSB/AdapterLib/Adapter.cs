@@ -1,11 +1,33 @@
-﻿using System;
-using System.Collections;
+﻿/*  
+* AllJoyn Device Service Bridge for Philips Hue
+*  
+* Copyright (c) Morten Nielsen
+* All rights reserved.  
+*  
+* MIT License  
+*  
+* Permission is hereby granted, free of charge, to any person obtaining a copy of this  
+* software and associated documentation files (the "Software"), to deal in the Software  
+* without restriction, including without limitation the rights to use, copy, modify, merge,  
+* publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons  
+* to whom the Software is furnished to do so, subject to the following conditions:  
+*  
+* The above copyright notice and this permission notice shall be included in all copies or  
+* substantial portions of the Software.  
+*  
+* THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,  
+* INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR  
+* PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE  
+* FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR  
+* OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER  
+* DEALINGS IN THE SOFTWARE.  
+*/
+
+using BridgeRT;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Runtime.InteropServices.WindowsRuntime;
-using BridgeRT;
 
 namespace AdapterLib
 {
@@ -47,7 +69,7 @@ namespace AdapterLib
 
             // the adapter prefix must be something like "com.mycompany" (only alpha num and dots)
             // it is used by the Device System Bridge as root string for all services and interfaces it exposes
-            this.ExposedAdapterPrefix = "com.github.dotMorten";
+            this.ExposedAdapterPrefix = "com.dotMorten";
             this.ExposedApplicationGuid = Guid.Parse("{0x07c19f14,0x76c6,0x4d2f,{0xb4,0xd1,0x7d,0x4f,0x89,0x24,0x17,0x36}}");
 
             if (null != package && null != packageId)
