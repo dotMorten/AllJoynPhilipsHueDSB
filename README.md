@@ -6,3 +6,8 @@ The project contains a Headed Windows App for testing on local desktop, and a He
 The AllJoyn bridge can handle any number of Hue bridges, and will remember the registration for each of them across sessions, so you don't need to re-link the process to the bridge again.
 
 To link a Hue bridge to the AllJoyn bridge, use AllJoyn Explorer to find and discover the Hue Bridges, press the "Link" button on your Hue bridge, and then execute the "Link" method on the AllJoyn bridge device. After this, any lightbulb associated with the Hue Bridge should show up in AllJoyn Explorer.
+
+###How to
+Read the full guide how to use this on Hackster:
+
+https://www.hackster.io/dotMorten/controlling-your-philips-hue-bulbs-with-alljoyn-3f0b29
