@@ -108,11 +108,12 @@ namespace AdapterLib
             _isLinkedProperty.Attributes.Add(new AdapterAttribute("IsLinked", isLinked, E_ACCESS_TYPE.ACCESS_READ) { COVBehavior = SignalBehavior.Always });
             this.Properties.Add(_isLinkedProperty);
 
-
-            //if (desc.IconUri != null)
-            //    Icon = new AdapterIcon(desc.IconUri.OriginalString);
-            Icon = new AdapterIcon("ms-appx:///AdapterLib/Icons/PhilipsHueIcon.png");
-
+            if(desc.ModelName.EndsWith(" 2012")) //V1 bridge
+               Icon = new AdapterIcon("ms-appx:///AdapterLib/Icons/HueBridge1.png");
+            else if (desc.ModelName.EndsWith(" 2015")) //V2 bridge
+                Icon = new AdapterIcon("ms-appx:///AdapterLib/Icons/HueBridge2.png");
+            else //Fallback - use uri from descriptor
+                Icon = new AdapterIcon(desc.IconUri.OriginalString);
             // change of value signal
             CreateSignals();
         }

@@ -133,10 +133,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Icons\HueBridge1.png" />
+    <Content Include="Icons\HueBridge2.png" />
     <Content Include="Icons\PhilipsHueBeyond.png" />
     <Content Include="Icons\PhilipsHueBloom.png" />
+    <Content Include="Icons\PhilipsHueLuxBulb.png" />
     <Content Include="Icons\PhilipsHueBulb.png" />
-    <Content Include="Icons\PhilipsHueBulb_Color.png" />
     <Content Include="Icons\PhilipsHueGo.png" />
     <Content Include="Icons\PhilipsHueIcon.png" />
     <Content Include="Icons\PhilipsHueIris.png" />

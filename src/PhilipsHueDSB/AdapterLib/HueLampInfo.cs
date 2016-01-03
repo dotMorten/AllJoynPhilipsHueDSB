@@ -302,13 +302,13 @@ namespace AdapterLib
                 switch (_light.ModelId)
                 {
                     case "LCT001": // Hue bulb A19
-                        return "ms-appx:///AdapterLib/Icons/PhilipsHueBulb_Color.png";
+                        return "ms-appx:///AdapterLib/Icons/PhilipsHueBulb.png";
                     case "LCT002": // Hue Spot BR30
                         return "ms-appx:///AdapterLib/Icons/PhilipsHueSpot_BR30.png";
                     case "LCT003": // Hue Spot GU10
                         return "ms-appx:///AdapterLib/Icons/PhilipsHueSpot_GU10.png";
                     case "LWB004": // Hue A19 Lux
-                        return "ms-appx:///AdapterLib/Icons/PhilipsHueBulb.png";
+                        return "ms-appx:///AdapterLib/Icons/PhilipsHueLuxBulb.png";
                     case "LLC006": // Living Colors Gen3 Iris
                     case "LLC010": // Hue Living Colors Iris
                     case "LLC013": // Disney Living Colors
@@ -323,7 +323,6 @@ namespace AdapterLib
                         return "ms-appx:///AdapterLib/Icons/PhilipsHueBeyond.png";
                     case "Go":
                         return "ms-appx:///AdapterLib/Icons/PhilipsHueGo.png";
-
                     case "LLM001": // Color Light Module
                     default:
                         break;
@@ -331,12 +330,12 @@ namespace AdapterLib
                 switch (_light.Type)
                 {
                     case "Extended color light":
-                        return "ms-appx:///AdapterLib/Icons/PhilipsHueBulb_Color.png";
+                        return "ms-appx:///AdapterLib/Icons/PhilipsHueBulb.png";
                     case "Color temperature light":
                     case "Color light":
                     case "Dimmable light":
                     default:
-                        return "ms-appx:///AdapterLib/Icons/PhilipsHueBulb.png";
+                        return "ms-appx:///AdapterLib/Icons/PhilipsHueLuxBulb.png";
                 }
             }
         }
