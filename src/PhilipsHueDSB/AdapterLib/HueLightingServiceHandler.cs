@@ -33,14 +33,6 @@ namespace AdapterLib
 {
     internal class HueLightingServiceHandler : ILSFHandler
     {
-        // Defines standard ranges for Lamp light state.
-        private const double OEM_LS_HUE_MIN = 0;
-        private const double OEM_LS_HUE_MAX = 360;
-        private const double OEM_LS_BRIGHTNESS_MIN = 0;
-        private const double OEM_LS_BRIGHTNESS_MAX = 1.0;
-        private const double OEM_LS_SATURATION_MIN = 0;
-        private const double OEM_LS_SATURATION_MAX = 1.0;
-
         private readonly Q42.HueApi.Light _light;
         private readonly Q42.HueApi.HueClient _client;
 
@@ -163,13 +155,13 @@ namespace AdapterLib
             //0 .. 65535.
             get
             {
-                return _light.State.Hue.HasValue ? (uint)(_light.State.Hue.Value / 65535d * 360) : 0;
+                return _light.State.Hue.HasValue ? (uint)(_light.State.Hue.Value / 65535d * UInt32.MaxValue) : 0;
             }
 
             set
             {
                 var command = new LightCommand();
-                command.Hue = (int)(value / 360d * 65535);
+                command.Hue = (int)(value * 65535d / UInt32.MaxValue);
                 _client.SendCommandAsync(command, new[] { _light.Id });
                 _light.State.Hue = (int)value;
             }
