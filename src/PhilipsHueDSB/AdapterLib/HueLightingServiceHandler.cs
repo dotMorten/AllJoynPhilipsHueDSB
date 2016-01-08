@@ -48,7 +48,7 @@ namespace AdapterLib
             LampDetails_Color = info.SupportsColor;
             LampDetails_ColorRenderingIndex = info.ColorRenderingIndex;
             LampDetails_Dimmable = info.IsDimmable;
-            LampDetails_HasEffects = false;
+            LampDetails_HasEffects = true;
             LampDetails_IncandescentEquivalent = info.IncandescentEquivalent;
             LampDetails_LampBaseType = (uint)info.BaseType;
             LampDetails_LampBeamAngle = info.LampBeamAngle;
@@ -228,12 +228,52 @@ namespace AdapterLib
         public uint LampState_ApplyPulseEffect(BridgeRT.State FromState, BridgeRT.State ToState, uint Period, uint Duration, uint NumPulses, ulong Timestamp, out uint LampResponseCode)
         {
             LampResponseCode = 0;
-            return 0; //TODO
+            ApplyPulseEffectAsync(FromState, ToState, Period, Duration, NumPulses, Timestamp);
+            return 1; //TODO
+        }
+
+        /// <summary>
+        /// Change the state of the lamp at the specified time, between the specified OnOff, Brightness, Hue,
+        /// Saturation, and ColorTemp values. Pulse for the specified number of times, at the specified duration
+        /// </summary>
+        /// <param name="FromState">Current state of the lamp to transition from</param>
+        /// <param name="ToState">New state of the lamp to transition to</param>
+        /// <param name="Period">Time period(in ms) to transition over to new state</param>
+        /// <param name="Duration">Time period(in ms) to remain in new state</param>
+        /// <param name="NumPulses">Number of pulses</param>
+        /// <param name="Timestamp">Timestamp (in ms) of when to start the pulses</param>
+        private async void ApplyPulseEffectAsync(BridgeRT.State FromState, BridgeRT.State ToState, uint Period, uint Duration, uint NumPulses, ulong Timestamp)
+        {
+            uint response;
+            await System.Threading.Tasks.Task.Delay((int)Timestamp).ConfigureAwait(false);
+            TransitionLampState(0, FromState, 0, out response);
+            for (int i = 0; i < NumPulses; i++)
+            {
+                TransitionLampState(0, ToState, Period, out response);
+                await System.Threading.Tasks.Task.Delay((int)(Period + Duration)).ConfigureAwait(false);
+                TransitionLampState(0, FromState, Period, out response);
+                await System.Threading.Tasks.Task.Delay((int)(Period + Duration)).ConfigureAwait(false);
+            }
         }
 
         public uint TransitionLampState(ulong Timestamp, BridgeRT.State NewState, uint TransitionPeriod, out uint LampResponseCode)
         {
+            var command = new LightCommand();
+            command.TransitionTime = TimeSpan.FromMilliseconds(TransitionPeriod);
+            command.On = NewState.IsOn;
+            if (NewState.Brightness.HasValue)
+                command.Brightness = (byte)(NewState.Brightness.Value * 254d / (UInt32.MaxValue - 1));
+            if (NewState.Hue.HasValue)
+                command.Hue = (int)(NewState.Hue.Value * 65535d / UInt32.MaxValue);
+            if (NewState.Saturation.HasValue)
+                command.Saturation = (int)(NewState.Saturation.Value * 254d / (UInt32.MaxValue - 1));
+            if (NewState.ColorTemp.HasValue)
+                command.ColorTemperature = (int)NewState.ColorTemp.Value;
             LampResponseCode = 0;
+            System.Threading.Tasks.Task.Delay(TimeSpan.FromMilliseconds(Timestamp)).ContinueWith(_ =>
+            {
+                _client.SendCommandAsync(command, new[] { _light.Id });
+            });
             return 0; //TODO
         }
     }
