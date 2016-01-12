@@ -261,14 +261,20 @@ namespace AdapterLib
             var command = new LightCommand();
             command.TransitionTime = TimeSpan.FromMilliseconds(TransitionPeriod);
             command.On = NewState.IsOn;
-            if (NewState.Brightness.HasValue)
+            if (NewState.Brightness.HasValue && LampDetails_Dimmable)
                 command.Brightness = (byte)(NewState.Brightness.Value * 254d / (UInt32.MaxValue - 1));
-            if (NewState.Hue.HasValue)
+            if (NewState.Hue.HasValue && LampDetails_Color)
                 command.Hue = (int)(NewState.Hue.Value * 65535d / UInt32.MaxValue);
-            if (NewState.Saturation.HasValue)
+            if (NewState.Saturation.HasValue && LampDetails_Color)
                 command.Saturation = (int)(NewState.Saturation.Value * 254d / (UInt32.MaxValue - 1));
-            if (NewState.ColorTemp.HasValue)
-                command.ColorTemperature = (int)NewState.ColorTemp.Value;
+            //Currently hue doesn't like setting color temp if the other parameters are also set.
+            //Skipping for now.
+            //if (NewState.ColorTemp.HasValue && LampDetails_VariableColorTemp)
+            //{
+            //    int kelvin = (int)Math.Max(LampDetails_MinTemperature, Math.Min(LampDetails_MaxTemperature, NewState.ColorTemp.Value));
+            //    UInt16 mired = (UInt16)(kelvin * -0.07711111111111111111111111111111 + 654.2222222222222);
+            //    command.ColorTemperature = mired;
+            //}
             LampResponseCode = 0;
             System.Threading.Tasks.Task.Delay(TimeSpan.FromMilliseconds(Timestamp)).ContinueWith(_ =>
             {
