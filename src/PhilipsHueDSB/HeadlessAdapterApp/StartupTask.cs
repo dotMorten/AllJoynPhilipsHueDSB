@@ -30,7 +30,7 @@ namespace PhilipsHueDSBHeadlessApp
                     throw new Exception("DSB Bridge initialization failed!");
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 if (dsbBridge != null)
                 {
