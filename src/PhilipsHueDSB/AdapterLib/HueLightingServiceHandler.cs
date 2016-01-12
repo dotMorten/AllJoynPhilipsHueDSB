@@ -138,15 +138,20 @@ namespace AdapterLib
         {
             get
             {
-                return _light.State.ColorTemperature.HasValue ? (uint)_light.State.ColorTemperature.Value : 0;
+                if (!_light.State.ColorTemperature.HasValue)
+                    return 0;
+                var kelvin = 1000000d / (_light.State.ColorTemperature);// - 654.2222222222222) / -0.07711111111111111111111111111111;
+                return (uint)kelvin;
             }
 
             set
             {
                 var command = new LightCommand();
-                command.ColorTemperature = (int)value;
+                int mired = (int)(1000000d / value);
+
+                command.ColorTemperature = mired;
                 _client.SendCommandAsync(command, new[] { _light.Id });
-                _light.State.ColorTemperature = (int)value;
+                _light.State.ColorTemperature = (int)mired;
             }
         }
 
