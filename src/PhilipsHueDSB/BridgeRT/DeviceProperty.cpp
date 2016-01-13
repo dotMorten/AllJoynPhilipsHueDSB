@@ -91,10 +91,10 @@ QStatus DeviceProperty::Initialize(IAdapterProperty ^deviceProperty, PropertyInt
         do
         {
             tempPath = m_AJBusObjectPath;
-            std::ostringstream tempString;
-            tempString << ++id;
+            std::ostringstream tmp;
+            tmp << ++id;
             tempPath += '/';
-            tempPath += tempString.str();
+            tempPath += tmp.str();
         } while (!parent->IsBusObjectPathUnique(tempPath));
 
         m_AJBusObjectPath = tempPath;

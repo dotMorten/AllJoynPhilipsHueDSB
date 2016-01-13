@@ -199,6 +199,7 @@ void AllJoynHelper::EncodeStringForAppName(Platform::String ^ inString, std::str
 QStatus AllJoynHelper::SetMsgArg(_In_ IAdapterValue ^adapterValue, _Inout_ alljoyn_msgarg msgArg)
 {
     QStatus status = ER_OK;
+    string signature;
     IPropertyValue ^propertyValue = dynamic_cast<IPropertyValue ^>(adapterValue->Data);
     if (nullptr == propertyValue)
     {
@@ -206,43 +207,53 @@ QStatus AllJoynHelper::SetMsgArg(_In_ IAdapterValue ^adapterValue, _Inout_ alljo
         goto leave;
     }
 
+    //get the signature
+    status = GetSignature(propertyValue->Type, signature);
+    if (status != ER_OK)
+    {
+        goto leave;
+    }
+
     switch (propertyValue->Type)
     {
     case PropertyType::Boolean:
-        status = alljoyn_msgarg_set(msgArg, "b", propertyValue->GetBoolean());
+        status = alljoyn_msgarg_set(msgArg, signature.c_str(), propertyValue->GetBoolean());
         break;
 
     case PropertyType::UInt8:
-        status = alljoyn_msgarg_set(msgArg, "y", propertyValue->GetUInt8());
+        status = alljoyn_msgarg_set(msgArg, signature.c_str(), propertyValue->GetUInt8());
         break;
 
-    case PropertyType::Char16:	__fallthrough;
+    case PropertyType::Char16:
+        status = alljoyn_msgarg_set(msgArg, signature.c_str(), static_cast<int16>(propertyValue->GetChar16()));
+        break;
+
     case PropertyType::Int16:
-        status = alljoyn_msgarg_set(msgArg, "n", propertyValue->GetInt16());
+        status = alljoyn_msgarg_set(msgArg, signature.c_str(), propertyValue->GetInt16());
         break;
 
     case PropertyType::UInt16:
-        status = alljoyn_msgarg_set(msgArg, "q", propertyValue->GetUInt16());
+        status = alljoyn_msgarg_set(msgArg, signature.c_str(), propertyValue->GetUInt16());
         break;
 
     case PropertyType::Int32:
-        status = alljoyn_msgarg_set(msgArg, "i", propertyValue->GetInt32());
+        status = alljoyn_msgarg_set(msgArg, signature.c_str(), propertyValue->GetInt32());
         break;
 
     case PropertyType::UInt32:
-        status = alljoyn_msgarg_set(msgArg, "u", propertyValue->GetUInt32());
+        status = alljoyn_msgarg_set(msgArg, signature.c_str(), propertyValue->GetUInt32());
         break;
 
     case PropertyType::Int64:
-        status = alljoyn_msgarg_set(msgArg, "x", propertyValue->GetInt64());
+        status = alljoyn_msgarg_set(msgArg, signature.c_str(), propertyValue->GetInt64());
         break;
 
     case PropertyType::UInt64:
-        status = alljoyn_msgarg_set(msgArg, "t", propertyValue->GetUInt64());
+        status = alljoyn_msgarg_set(msgArg, signature.c_str(), propertyValue->GetUInt64());
         break;
 
     case PropertyType::Double:
-        status = alljoyn_msgarg_set(msgArg, "d", propertyValue->GetDouble());
+        status = alljoyn_msgarg_set(msgArg, signature.c_str(), propertyValue->GetDouble());
         break;
 
     case PropertyType::String:
@@ -250,13 +261,93 @@ QStatus AllJoynHelper::SetMsgArg(_In_ IAdapterValue ^adapterValue, _Inout_ alljo
         string tempString = ConvertTo<string>(propertyValue->GetString());
         if (0 != tempString.length())
         {
-            status = alljoyn_msgarg_set_and_stabilize(msgArg, "s", tempString.c_str());
+            status = alljoyn_msgarg_set_and_stabilize(msgArg, signature.c_str(), tempString.c_str());
         }
         else
         {
             // set empty string
-            status = alljoyn_msgarg_set(msgArg, "s", "");
+            status = alljoyn_msgarg_set(msgArg, signature.c_str(), "");
         }
+        break;
+    }
+    case PropertyType::BooleanArray:
+    {
+        Platform::Array<bool>^ boolArray;
+        propertyValue->GetBooleanArray(&boolArray);
+
+        status = SetMsgArg(msgArg, signature.c_str(), boolArray);
+        break;
+    }
+    case PropertyType::UInt8Array:
+    {
+        Platform::Array<uint8>^ byteArray;
+        propertyValue->GetUInt8Array(&byteArray);
+
+        status = SetMsgArg(msgArg, signature.c_str(), byteArray);
+        break;
+    }
+    case PropertyType::Char16Array:
+    {
+        Platform::Array<wchar_t>^ charArray;
+        propertyValue->GetChar16Array(&charArray);
+
+        status = SetMsgArg(msgArg, signature.c_str(), charArray);
+        break;
+    }
+    case PropertyType::Int16Array:
+    {
+        Platform::Array<int16>^ intArray;
+        propertyValue->GetInt16Array(&intArray);
+
+        status = SetMsgArg(msgArg, signature.c_str(), intArray);
+        break;
+    }
+    case PropertyType::UInt16Array:
+    {
+        Platform::Array<uint16>^ uintArray;
+        propertyValue->GetUInt16Array(&uintArray);
+
+        status = SetMsgArg(msgArg, signature.c_str(), uintArray);
+        break;
+    }
+    case PropertyType::Int32Array:
+    {
+        Platform::Array<int32>^ intArray;
+        propertyValue->GetInt32Array(&intArray);
+
+        status = SetMsgArg(msgArg, signature.c_str(), intArray);
+        break;
+    }
+    case PropertyType::UInt32Array:
+    {
+        Platform::Array<uint32>^ uintArray;
+        propertyValue->GetUInt32Array(&uintArray);
+
+        status = SetMsgArg(msgArg, signature.c_str(), uintArray);
+        break;
+    }
+    case PropertyType::Int64Array:
+    {
+        Platform::Array<int64>^ intArray;
+        propertyValue->GetInt64Array(&intArray);
+
+        status = SetMsgArg(msgArg, signature.c_str(), intArray);
+        break;
+    }
+    case PropertyType::UInt64Array:
+    {
+        Platform::Array<uint64>^ uintArray;
+        propertyValue->GetUInt64Array(&uintArray);
+
+        status = SetMsgArg(msgArg, signature.c_str(), uintArray);
+        break;
+    }
+    case PropertyType::DoubleArray:
+    {
+        Platform::Array<double>^ doubleArray;
+        propertyValue->GetDoubleArray(&doubleArray);
+
+        status = SetMsgArg(msgArg, signature.c_str(), doubleArray);
         break;
     }
     case PropertyType::StringArray:
@@ -273,7 +364,7 @@ QStatus AllJoynHelper::SetMsgArg(_In_ IAdapterValue ^adapterValue, _Inout_ alljo
                 strcpy_s(tempBuffer[i], str->Length() + 1, ConvertTo<string>(str).c_str());
                 ++i;
             }
-            status = alljoyn_msgarg_set_and_stabilize(msgArg, "as", strArray->Length, tempBuffer);
+            status = alljoyn_msgarg_set_and_stabilize(msgArg, signature.c_str(), strArray->Length, tempBuffer);
 
             //now delete temp buffer
             for (i = 0; i < strArray->Length; ++i)
@@ -281,45 +372,11 @@ QStatus AllJoynHelper::SetMsgArg(_In_ IAdapterValue ^adapterValue, _Inout_ alljo
                 delete[] tempBuffer[i];
             }
             delete[] tempBuffer;
-
         }
         else
         {
             // set empty string
-            status = alljoyn_msgarg_set(msgArg, "as", 1, "");
-        }
-        break;
-    }
-    case PropertyType::UInt32Array:
-    {
-        Platform::Array<uint32>^ unsignedIntArray;
-        propertyValue->GetUInt32Array(&unsignedIntArray);
-        uint32* tempBuffer = nullptr;
-
-        if (unsignedIntArray && unsignedIntArray->Length > 0)
-        {
-            size_t i = 0;
-            tempBuffer = new (nothrow) uint32[unsignedIntArray->Length];
-
-            for (auto uIntValue : unsignedIntArray)
-            {
-                tempBuffer[i] = uIntValue;
-                ++i;
-            }
-
-            status = alljoyn_msgarg_set_and_stabilize(msgArg, "au", unsignedIntArray->Length, tempBuffer);
-
-            // delete temporary buffer
-            delete [] tempBuffer;
-        }
-        else
-        {
-            tempBuffer = new (nothrow) uint32[1];
-            tempBuffer[0] = 0;
-            status = alljoyn_msgarg_set_and_stabilize(msgArg, "au", 1, tempBuffer);
-
-            // delete temporary buffer
-            delete [] tempBuffer;
+            status = alljoyn_msgarg_set(msgArg, signature.c_str(), 1, "");
         }
         break;
     }
@@ -332,9 +389,45 @@ leave:
     return status;
 }
 
+template<typename T>
+QStatus AllJoynHelper::SetMsgArg(_Inout_ alljoyn_msgarg msgArg, _In_ const std::string& ajSignature, _In_ Platform::Array<T>^ arrayArg)
+{
+    QStatus status = ER_OK;
+
+    T* tempBuffer = nullptr;
+
+    if (arrayArg && arrayArg->Length > 0)
+    {
+        size_t i = 0;
+        tempBuffer = new (nothrow) T[arrayArg->Length];
+
+        for (auto value : arrayArg)
+        {
+            tempBuffer[i] = value;
+            ++i;
+        }
+
+        status = alljoyn_msgarg_set_and_stabilize(msgArg, ajSignature.c_str(), arrayArg->Length, tempBuffer);
+    }
+    else
+    {
+        tempBuffer = new (nothrow) T[1];
+        tempBuffer[0] = 0;
+        status = alljoyn_msgarg_set_and_stabilize(msgArg, ajSignature.c_str(), 1, tempBuffer);
+    }
+
+    if (tempBuffer)
+    {
+        delete[] tempBuffer;
+    }
+
+    return status;
+}
+
 QStatus AllJoynHelper::GetAdapterValue(_Inout_ IAdapterValue ^adapterValue, _In_ alljoyn_msgarg msgArg)
 {
     QStatus status = ER_OK;
+    string signature;
     IPropertyValue^ propertyValue = nullptr;
 
     // sanity check
@@ -344,12 +437,19 @@ QStatus AllJoynHelper::GetAdapterValue(_Inout_ IAdapterValue ^adapterValue, _In_
         goto leave;
     }
 
+    //get the signature
+    status = GetSignature(propertyValue->Type, signature);
+    if (status != ER_OK)
+    {
+        goto leave;
+    }
+
     switch (propertyValue->Type)
     {
     case PropertyType::Boolean:
     {
         bool tempVal;
-        status = alljoyn_msgarg_get(msgArg, "b", &tempVal);
+        status = alljoyn_msgarg_get(msgArg, signature.c_str(), &tempVal);
         if (ER_OK == status)
         {
             Platform::Object ^object = PropertyValue::CreateBoolean(tempVal);
@@ -361,7 +461,7 @@ QStatus AllJoynHelper::GetAdapterValue(_Inout_ IAdapterValue ^adapterValue, _In_
     case PropertyType::UInt8:
     {
         int8 tempVal;
-        status = alljoyn_msgarg_get(msgArg, "y", &tempVal);
+        status = alljoyn_msgarg_get(msgArg, signature.c_str(), &tempVal);
         if (ER_OK == status)
         {
             Platform::Object ^object = PropertyValue::CreateUInt8(tempVal);
@@ -370,11 +470,11 @@ QStatus AllJoynHelper::GetAdapterValue(_Inout_ IAdapterValue ^adapterValue, _In_
         break;
     }
 
-    case PropertyType::Char16:	__fallthrough;
+    case PropertyType::Char16:  __fallthrough;
     case PropertyType::Int16:
     {
         int16 tempVal;
-        status = alljoyn_msgarg_get(msgArg, "n", &tempVal);
+        status = alljoyn_msgarg_get(msgArg, signature.c_str(), &tempVal);
         if (ER_OK == status)
         {
             Platform::Object ^object = PropertyValue::CreateInt16(tempVal);
@@ -386,7 +486,7 @@ QStatus AllJoynHelper::GetAdapterValue(_Inout_ IAdapterValue ^adapterValue, _In_
     case PropertyType::UInt16:
     {
         uint16 tempVal;
-        status = alljoyn_msgarg_get(msgArg, "q", &tempVal);
+        status = alljoyn_msgarg_get(msgArg, signature.c_str(), &tempVal);
         if (ER_OK == status)
         {
             Platform::Object ^object = PropertyValue::CreateUInt16(tempVal);
@@ -398,7 +498,7 @@ QStatus AllJoynHelper::GetAdapterValue(_Inout_ IAdapterValue ^adapterValue, _In_
     case PropertyType::Int32:
     {
         int32 tempVal;
-        status = alljoyn_msgarg_get(msgArg, "i", &tempVal);
+        status = alljoyn_msgarg_get(msgArg, signature.c_str(), &tempVal);
         if (ER_OK == status)
         {
             Platform::Object ^object = PropertyValue::CreateInt32(tempVal);
@@ -410,7 +510,7 @@ QStatus AllJoynHelper::GetAdapterValue(_Inout_ IAdapterValue ^adapterValue, _In_
     case PropertyType::UInt32:
     {
         uint32 tempVal;
-        status = alljoyn_msgarg_get(msgArg, "u", &tempVal);
+        status = alljoyn_msgarg_get(msgArg, signature.c_str(), &tempVal);
         if (ER_OK == status)
         {
             Platform::Object ^object = PropertyValue::CreateUInt32(tempVal);
@@ -422,7 +522,7 @@ QStatus AllJoynHelper::GetAdapterValue(_Inout_ IAdapterValue ^adapterValue, _In_
     case PropertyType::Int64:
     {
         int64 tempVal;
-        status = alljoyn_msgarg_get(msgArg, "x", &tempVal);
+        status = alljoyn_msgarg_get(msgArg, signature.c_str(), &tempVal);
         if (ER_OK == status)
         {
             Platform::Object ^object = PropertyValue::CreateInt64(tempVal);
@@ -434,7 +534,7 @@ QStatus AllJoynHelper::GetAdapterValue(_Inout_ IAdapterValue ^adapterValue, _In_
     case PropertyType::UInt64:
     {
         uint64 tempVal;
-        status = alljoyn_msgarg_get(msgArg, "t", &tempVal);
+        status = alljoyn_msgarg_get(msgArg, signature.c_str(), &tempVal);
         if (ER_OK == status)
         {
             Platform::Object ^object = PropertyValue::CreateUInt64(tempVal);
@@ -446,7 +546,7 @@ QStatus AllJoynHelper::GetAdapterValue(_Inout_ IAdapterValue ^adapterValue, _In_
     case PropertyType::Double:
     {
         double tempVal;
-        status = alljoyn_msgarg_get(msgArg, "d", &tempVal);
+        status = alljoyn_msgarg_get(msgArg, signature.c_str(), &tempVal);
         if (ER_OK == status)
         {
             Platform::Object ^object = PropertyValue::CreateDouble(tempVal);
@@ -458,7 +558,7 @@ QStatus AllJoynHelper::GetAdapterValue(_Inout_ IAdapterValue ^adapterValue, _In_
     case PropertyType::String:
     {
         char *tempChar = nullptr;
-        status = alljoyn_msgarg_get(msgArg, "s", &tempChar);
+        status = alljoyn_msgarg_get(msgArg, signature.c_str(), &tempChar);
         if (ER_OK == status)
         {
             // convert char to wide char, create Platform::String
@@ -467,13 +567,103 @@ QStatus AllJoynHelper::GetAdapterValue(_Inout_ IAdapterValue ^adapterValue, _In_
         }
         break;
     }
+    case PropertyType::BooleanArray:
+    {
+        Platform::Array<bool>^ boolArray;
 
+        if ((status = GetArrayFromMsgArg(msgArg, signature.c_str(), &boolArray)) == ER_OK)
+        {
+            adapterValue->Data = PropertyValue::CreateBooleanArray(boolArray);
+        }
+        break;
+    }
+    case PropertyType::UInt8Array:
+    {
+        Platform::Array<uint8>^ byteArray;
+
+        if ((status = GetArrayFromMsgArg(msgArg, signature.c_str(), &byteArray)) == ER_OK)
+        {
+            adapterValue->Data = PropertyValue::CreateUInt8Array(byteArray);
+        }
+        break;
+    }
+    case PropertyType::Char16Array: __fallthrough;
+    case PropertyType::Int16Array:
+    {
+        Platform::Array<int16>^ intArray;
+
+        if ((status = GetArrayFromMsgArg(msgArg, signature.c_str(), &intArray)) == ER_OK)
+        {
+            adapterValue->Data = PropertyValue::CreateInt16Array(intArray);
+        }
+        break;
+    }
+    case PropertyType::UInt16Array:
+    {
+        Platform::Array<uint16>^ uintArray;
+
+        if ((status = GetArrayFromMsgArg(msgArg, signature.c_str(), &uintArray)) == ER_OK)
+        {
+            adapterValue->Data = PropertyValue::CreateUInt16Array(uintArray);
+        }
+        break;
+    }
+    case PropertyType::Int32Array:
+    {
+        Platform::Array<int32>^ intArray;
+
+        if ((status = GetArrayFromMsgArg(msgArg, signature.c_str(), &intArray)) == ER_OK)
+        {
+            adapterValue->Data = PropertyValue::CreateInt32Array(intArray);
+        }
+        break;
+    }
+    case PropertyType::UInt32Array:
+    {
+        Platform::Array<uint32>^ uintArray;
+
+        if ((status = GetArrayFromMsgArg(msgArg, signature.c_str(), &uintArray)) == ER_OK)
+        {
+            adapterValue->Data = PropertyValue::CreateUInt32Array(uintArray);
+        }
+        break;
+    }
+    case PropertyType::Int64Array:
+    {
+        Platform::Array<int64>^ intArray;
+
+        if ((status = GetArrayFromMsgArg(msgArg, signature.c_str(), &intArray)) == ER_OK)
+        {
+            adapterValue->Data = PropertyValue::CreateInt64Array(intArray);
+        }
+        break;
+    }
+    case PropertyType::UInt64Array:
+    {
+        Platform::Array<uint64>^ uintArray;
+
+        if ((status = GetArrayFromMsgArg(msgArg, signature.c_str(), &uintArray)) == ER_OK)
+        {
+            adapterValue->Data = PropertyValue::CreateUInt64Array(uintArray);
+        }
+        break;
+    }
+    case PropertyType::DoubleArray:
+    {
+        Platform::Array<double>^ doubleArray;
+
+        if ((status = GetArrayFromMsgArg(msgArg, signature.c_str(), &doubleArray)) == ER_OK)
+        {
+            adapterValue->Data = PropertyValue::CreateDoubleArray(doubleArray);
+        }
+        break;
+    }
     case PropertyType::StringArray:
     {
         alljoyn_msgarg entries;;
         size_t numVals = 0;
 
-        status = alljoyn_msgarg_get(msgArg, "as", &numVals, &entries);
+        status = alljoyn_msgarg_get(msgArg, signature.c_str(), &numVals, &entries);
         if (ER_OK == status)
         {
             Platform::Array<String^>^ stringArray = ref new Platform::Array<String^>(numVals);
@@ -481,7 +671,7 @@ QStatus AllJoynHelper::GetAdapterValue(_Inout_ IAdapterValue ^adapterValue, _In_
             for (size_t i = 0; i < numVals; ++i)
             {
                 char *tempBuffer = nullptr;
-                status = alljoyn_msgarg_get(alljoyn_msgarg_array_element(entries, i), "s", &tempBuffer);
+                status = alljoyn_msgarg_get(alljoyn_msgarg_array_element(entries, i), &signature[1], &tempBuffer);
                 if (ER_OK == status)
                 {
                     stringArray[i] = ref new String(ConvertTo<wstring>(string(tempBuffer)).c_str());
@@ -493,33 +683,44 @@ QStatus AllJoynHelper::GetAdapterValue(_Inout_ IAdapterValue ^adapterValue, _In_
         break;
     }
 
-    case PropertyType::UInt32Array:
-    {
-        alljoyn_msgarg entries;
-        size_t numVals = 0;
-
-        status = alljoyn_msgarg_get(msgArg, "au", &numVals, &entries);
-        if (ER_OK == status)
-        {
-            Platform::Array<uint32>^ unsignedIntArray = ref new Platform::Array<uint32>(numVals);
-
-            uint32 tempUintBuffer;
-            for (size_t i = 0; i < numVals; i++)
-            {
-                status = alljoyn_msgarg_get(alljoyn_msgarg_array_element(entries, i), "u", &tempUintBuffer);
-                if (ER_OK == status)
-                {
-                    unsignedIntArray[i] = tempUintBuffer;
-                }
-            }
-            adapterValue->Data = PropertyValue::CreateUInt32Array(unsignedIntArray);
-        }
-        break;
-    }
 
     default:
         status = ER_NOT_IMPLEMENTED;
         break;
+    }
+
+leave:
+    return status;
+}
+
+template<typename T>
+QStatus AllJoynHelper::GetArrayFromMsgArg(_In_ alljoyn_msgarg msgArg, _In_ const std::string& ajSignature, _Out_ Platform::Array<T>^* arrayArg)
+{
+    QStatus status = ER_OK;
+    alljoyn_msgarg entries;
+    size_t numVals = 0;
+
+    if (ajSignature.length() != 2 && ajSignature[0] != 'a')
+    {
+        status = ER_BAD_ARG_2;
+        goto leave;
+    }
+
+    status = alljoyn_msgarg_get(msgArg, ajSignature.c_str(), &numVals, &entries);
+    if (ER_OK == status)
+    {
+        *arrayArg = ref new Platform::Array<T>(numVals);
+
+        T temp;
+        for (size_t i = 0; i < numVals; i++)
+        {
+            status = alljoyn_msgarg_get(alljoyn_msgarg_array_element(entries, i), &ajSignature[1], &temp);
+            if (ER_OK != status)
+            {
+                goto leave;
+            }
+            (*arrayArg)[i] = temp;
+        }
     }
 
 leave:
@@ -615,7 +816,7 @@ QStatus AllJoynHelper::GetSignature(_In_ PropertyType propertyType, _Out_ std::s
         signature = "y";
         break;
 
-    case PropertyType::Char16:	__fallthrough;
+    case PropertyType::Char16:  __fallthrough;
     case PropertyType::Int16:
         signature = "n";
         break;
@@ -648,12 +849,45 @@ QStatus AllJoynHelper::GetSignature(_In_ PropertyType propertyType, _Out_ std::s
         signature = "s";
         break;
 
-    case PropertyType::StringArray:
-        signature = "as";
+    case PropertyType::BooleanArray:
+        signature = "ab";
+        break;
+
+    case PropertyType::UInt8Array:
+        signature = "ay";
+        break;
+
+    case PropertyType::Char16Array: __fallthrough;
+    case PropertyType::Int16Array:
+        signature = "an";
+        break;
+
+    case PropertyType::UInt16Array:
+        signature = "aq";
+        break;
+
+    case PropertyType::Int32Array:
+        signature = "ai";
         break;
 
     case PropertyType::UInt32Array:
         signature = "au";
+        break;
+
+    case PropertyType::Int64Array:
+        signature = "ax";
+        break;
+
+    case PropertyType::UInt64Array:
+        signature = "at";
+        break;
+
+    case PropertyType::DoubleArray:
+        signature = "ad";
+        break;
+
+    case PropertyType::StringArray:
+        signature = "as";
         break;
 
     default:

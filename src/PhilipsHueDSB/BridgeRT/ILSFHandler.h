@@ -16,9 +16,11 @@
 
 #pragma once
 #include "AdapterDefinitions.h"
+#include "LSFEnums.h"
 
 namespace BridgeRT
 {
+
     public ref struct State sealed
     {
     public:

@@ -261,6 +261,7 @@
     <ClInclude Include="LampState.h" />
     <ClInclude Include="LSF.h" />
     <ClInclude Include="LSFConsts.h" />
+    <ClInclude Include="LSFEnums.h" />
     <ClInclude Include="LSFSignalHandler.h" />
     <ClInclude Include="WidgetAction.h" />
     <ClInclude Include="AllJoynAbout.h" />

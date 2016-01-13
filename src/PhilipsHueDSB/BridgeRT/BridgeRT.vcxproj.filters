@@ -85,5 +85,6 @@
     <ClInclude Include="LSF.h" />
     <ClInclude Include="LSFConsts.h" />
     <ClInclude Include="LSFSignalHandler.h" />
+    <ClInclude Include="LSFEnums.h" />
   </ItemGroup>
 </Project>
