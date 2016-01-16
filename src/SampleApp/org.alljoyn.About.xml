@@ -1,0 +1,18 @@
+<node name="/About">
+<interface name="org.alljoyn.About">
+  <property name="Version" type="q" access="read"/>
+  <method name="GetAboutData">
+    <arg type="s" direction="in"/>
+    <arg type="a{sv}" direction="out"/>
+  </method>
+  <method name="GetObjectDescription">
+    <arg type="a{oas}" direction="out"/>
+  </method>
+  <signal name="Announce">
+    <arg type="q"/>
+    <arg type="q"/>
+    <arg type="a{oas}"/>
+    <arg type="a{sv}"/>
+  </signal>
+</interface>
+</node>

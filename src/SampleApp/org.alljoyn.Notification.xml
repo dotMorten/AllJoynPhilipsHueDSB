@@ -1,0 +1,17 @@
+<node>
+    <interface name="org.alljoyn.Notification">
+        <property name="Version" type="q" access="read"/>
+        <signal name="notify">
+            <arg name="version" type="q"/>
+            <arg name="msgId" type="i"/>  
+            <arg name="msgType" type="q"/>
+            <arg name="deviceId" type="s"/>
+            <arg name="deviceName" type="s"/>
+            <arg name="appId" type="ay"/>
+            <arg name="appName" type="s"/>
+            <arg name="attributes" type="a{iv}"/>
+            <arg name="customAttributes" type="a{ss}"/>
+            <arg name="langText" type="a(ss)"/>
+        </signal>
+    </interface>
+</node>

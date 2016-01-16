@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resources">
+      <UniqueIdentifier>51571eaa-6c0f-481a-9e4b-6741064d4355</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tga;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="AllJoynBusObjectManager.cpp" />
+    <ClCompile Include="AllJoynHelpers.cpp" />
+    <ClCompile Include="LampStateConsumer.cpp" />
+    <ClCompile Include="LampStateProducer.cpp" />
+    <ClCompile Include="LampStateServiceEventAdapter.cpp" />
+    <ClCompile Include="LampStateServiceEventArgs.cpp" />
+    <ClCompile Include="LampStateSignals.cpp" />
+    <ClCompile Include="LampStateWatcher.cpp" />
+    <ClCompile Include="TypeConversionHelpers.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="AllJoynBusObjectManager.h" />
+    <ClInclude Include="AllJoynHelpers.h" />
+    <ClInclude Include="ILampStateService.h" />
+    <ClInclude Include="LampStateConsumer.h" />
+    <ClInclude Include="LampStateEventArgs.h" />
+    <ClInclude Include="LampStateMethodResults.h" />
+    <ClInclude Include="LampStateProducer.h" />
+    <ClInclude Include="LampStateServiceEventAdapter.h" />
+    <ClInclude Include="LampStateServiceEventArgs.h" />
+    <ClInclude Include="LampStateSignals.h" />
+    <ClInclude Include="LampStateStructures.h" />
+    <ClInclude Include="LampStateWatcher.h" />
+    <ClInclude Include="TypeConversionHelpers.h" />
+  </ItemGroup>
+</Project>

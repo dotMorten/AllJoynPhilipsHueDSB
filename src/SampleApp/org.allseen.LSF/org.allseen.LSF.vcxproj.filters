@@ -1,0 +1,209 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="AllJoynBusObjectManager.cpp" />
+    <ClCompile Include="AllJoynHelpers.cpp" />
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="TypeConversionHelpers.cpp" />
+    <ClCompile Include="LampDetails\LampDetailsConsumer.cpp">
+      <Filter>LampDetails</Filter>
+    </ClCompile>
+    <ClCompile Include="LampDetails\LampDetailsProducer.cpp">
+      <Filter>LampDetails</Filter>
+    </ClCompile>
+    <ClCompile Include="LampDetails\LampDetailsServiceEventAdapter.cpp">
+      <Filter>LampDetails</Filter>
+    </ClCompile>
+    <ClCompile Include="LampDetails\LampDetailsServiceEventArgs.cpp">
+      <Filter>LampDetails</Filter>
+    </ClCompile>
+    <ClCompile Include="LampDetails\LampDetailsSignals.cpp">
+      <Filter>LampDetails</Filter>
+    </ClCompile>
+    <ClCompile Include="LampDetails\LampDetailsWatcher.cpp">
+      <Filter>LampDetails</Filter>
+    </ClCompile>
+    <ClCompile Include="LampParameters\LampParametersConsumer.cpp">
+      <Filter>LampParameters</Filter>
+    </ClCompile>
+    <ClCompile Include="LampParameters\LampParametersProducer.cpp">
+      <Filter>LampParameters</Filter>
+    </ClCompile>
+    <ClCompile Include="LampParameters\LampParametersServiceEventAdapter.cpp">
+      <Filter>LampParameters</Filter>
+    </ClCompile>
+    <ClCompile Include="LampParameters\LampParametersServiceEventArgs.cpp">
+      <Filter>LampParameters</Filter>
+    </ClCompile>
+    <ClCompile Include="LampParameters\LampParametersSignals.cpp">
+      <Filter>LampParameters</Filter>
+    </ClCompile>
+    <ClCompile Include="LampParameters\LampParametersWatcher.cpp">
+      <Filter>LampParameters</Filter>
+    </ClCompile>
+    <ClCompile Include="LampService\LampServiceConsumer.cpp">
+      <Filter>LampService</Filter>
+    </ClCompile>
+    <ClCompile Include="LampService\LampServiceProducer.cpp">
+      <Filter>LampService</Filter>
+    </ClCompile>
+    <ClCompile Include="LampService\LampServiceServiceEventAdapter.cpp">
+      <Filter>LampService</Filter>
+    </ClCompile>
+    <ClCompile Include="LampService\LampServiceServiceEventArgs.cpp">
+      <Filter>LampService</Filter>
+    </ClCompile>
+    <ClCompile Include="LampService\LampServiceSignals.cpp">
+      <Filter>LampService</Filter>
+    </ClCompile>
+    <ClCompile Include="LampService\LampServiceWatcher.cpp">
+      <Filter>LampService</Filter>
+    </ClCompile>
+    <ClCompile Include="LampState\LampStateConsumer.cpp">
+      <Filter>LampState</Filter>
+    </ClCompile>
+    <ClCompile Include="LampState\LampStateProducer.cpp">
+      <Filter>LampState</Filter>
+    </ClCompile>
+    <ClCompile Include="LampState\LampStateServiceEventAdapter.cpp">
+      <Filter>LampState</Filter>
+    </ClCompile>
+    <ClCompile Include="LampState\LampStateServiceEventArgs.cpp">
+      <Filter>LampState</Filter>
+    </ClCompile>
+    <ClCompile Include="LampState\LampStateSignals.cpp">
+      <Filter>LampState</Filter>
+    </ClCompile>
+    <ClCompile Include="LampState\LampStateWatcher.cpp">
+      <Filter>LampState</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AllJoynBusObjectManager.h" />
+    <ClInclude Include="AllJoynHelpers.h" />
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="TypeConversionHelpers.h" />
+    <ClInclude Include="LampState\ILampStateService.h">
+      <Filter>LampState</Filter>
+    </ClInclude>
+    <ClInclude Include="LampService\ILampServiceService.h">
+      <Filter>LampService</Filter>
+    </ClInclude>
+    <ClInclude Include="LampDetails\ILampDetailsService.h">
+      <Filter>LampDetails</Filter>
+    </ClInclude>
+    <ClInclude Include="LampParameters\ILampParametersService.h">
+      <Filter>LampParameters</Filter>
+    </ClInclude>
+    <ClInclude Include="LampDetails\LampDetailsConsumer.h">
+      <Filter>LampDetails</Filter>
+    </ClInclude>
+    <ClInclude Include="LampDetails\LampDetailsEventArgs.h">
+      <Filter>LampDetails</Filter>
+    </ClInclude>
+    <ClInclude Include="LampDetails\LampDetailsMethodResults.h">
+      <Filter>LampDetails</Filter>
+    </ClInclude>
+    <ClInclude Include="LampDetails\LampDetailsProducer.h">
+      <Filter>LampDetails</Filter>
+    </ClInclude>
+    <ClInclude Include="LampDetails\LampDetailsServiceEventAdapter.h">
+      <Filter>LampDetails</Filter>
+    </ClInclude>
+    <ClInclude Include="LampDetails\LampDetailsServiceEventArgs.h">
+      <Filter>LampDetails</Filter>
+    </ClInclude>
+    <ClInclude Include="LampDetails\LampDetailsSignals.h">
+      <Filter>LampDetails</Filter>
+    </ClInclude>
+    <ClInclude Include="LampDetails\LampDetailsWatcher.h">
+      <Filter>LampDetails</Filter>
+    </ClInclude>
+    <ClInclude Include="LampParameters\LampParametersConsumer.h">
+      <Filter>LampParameters</Filter>
+    </ClInclude>
+    <ClInclude Include="LampParameters\LampParametersEventArgs.h">
+      <Filter>LampParameters</Filter>
+    </ClInclude>
+    <ClInclude Include="LampParameters\LampParametersMethodResults.h">
+      <Filter>LampParameters</Filter>
+    </ClInclude>
+    <ClInclude Include="LampParameters\LampParametersProducer.h">
+      <Filter>LampParameters</Filter>
+    </ClInclude>
+    <ClInclude Include="LampParameters\LampParametersServiceEventAdapter.h">
+      <Filter>LampParameters</Filter>
+    </ClInclude>
+    <ClInclude Include="LampParameters\LampParametersServiceEventArgs.h">
+      <Filter>LampParameters</Filter>
+    </ClInclude>
+    <ClInclude Include="LampParameters\LampParametersSignals.h">
+      <Filter>LampParameters</Filter>
+    </ClInclude>
+    <ClInclude Include="LampParameters\LampParametersWatcher.h">
+      <Filter>LampParameters</Filter>
+    </ClInclude>
+    <ClInclude Include="LampService\LampServiceConsumer.h">
+      <Filter>LampService</Filter>
+    </ClInclude>
+    <ClInclude Include="LampService\LampServiceEventArgs.h">
+      <Filter>LampService</Filter>
+    </ClInclude>
+    <ClInclude Include="LampService\LampServiceMethodResults.h">
+      <Filter>LampService</Filter>
+    </ClInclude>
+    <ClInclude Include="LampService\LampServiceProducer.h">
+      <Filter>LampService</Filter>
+    </ClInclude>
+    <ClInclude Include="LampService\LampServiceServiceEventAdapter.h">
+      <Filter>LampService</Filter>
+    </ClInclude>
+    <ClInclude Include="LampService\LampServiceServiceEventArgs.h">
+      <Filter>LampService</Filter>
+    </ClInclude>
+    <ClInclude Include="LampService\LampServiceSignals.h">
+      <Filter>LampService</Filter>
+    </ClInclude>
+    <ClInclude Include="LampService\LampServiceWatcher.h">
+      <Filter>LampService</Filter>
+    </ClInclude>
+    <ClInclude Include="LampState\LampStateConsumer.h">
+      <Filter>LampState</Filter>
+    </ClInclude>
+    <ClInclude Include="LampState\LampStateEventArgs.h">
+      <Filter>LampState</Filter>
+    </ClInclude>
+    <ClInclude Include="LampState\LampStateMethodResults.h">
+      <Filter>LampState</Filter>
+    </ClInclude>
+    <ClInclude Include="LampState\LampStateProducer.h">
+      <Filter>LampState</Filter>
+    </ClInclude>
+    <ClInclude Include="LampState\LampStateServiceEventAdapter.h">
+      <Filter>LampState</Filter>
+    </ClInclude>
+    <ClInclude Include="LampState\LampStateServiceEventArgs.h">
+      <Filter>LampState</Filter>
+    </ClInclude>
+    <ClInclude Include="LampState\LampStateSignals.h">
+      <Filter>LampState</Filter>
+    </ClInclude>
+    <ClInclude Include="LampState\LampStateWatcher.h">
+      <Filter>LampState</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="LampState">
+      <UniqueIdentifier>{36226992-2f91-413c-9ee8-9921b930a2a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LampService">
+      <UniqueIdentifier>{319710ef-57e7-4339-abd8-55a008f802c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LampDetails">
+      <UniqueIdentifier>{a657fb70-e853-4fb7-b6b7-efa164fcc9ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LampParameters">
+      <UniqueIdentifier>{e0d1d204-7697-42df-b047-c2eafecc5995}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

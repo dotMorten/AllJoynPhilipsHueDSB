@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resources">
+      <UniqueIdentifier>e987ce2b-98c4-473e-bad1-8664edd5a849</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tga;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="AllJoynBusObjectManager.cpp" />
+    <ClCompile Include="AllJoynHelpers.cpp" />
+    <ClCompile Include="NotificationConsumer.cpp" />
+    <ClCompile Include="NotificationProducer.cpp" />
+    <ClCompile Include="NotificationServiceEventAdapter.cpp" />
+    <ClCompile Include="NotificationServiceEventArgs.cpp" />
+    <ClCompile Include="NotificationSignals.cpp" />
+    <ClCompile Include="NotificationWatcher.cpp" />
+    <ClCompile Include="TypeConversionHelpers.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="AllJoynBusObjectManager.h" />
+    <ClInclude Include="AllJoynHelpers.h" />
+    <ClInclude Include="INotificationService.h" />
+    <ClInclude Include="NotificationConsumer.h" />
+    <ClInclude Include="NotificationEventArgs.h" />
+    <ClInclude Include="NotificationMethodResults.h" />
+    <ClInclude Include="NotificationProducer.h" />
+    <ClInclude Include="NotificationServiceEventAdapter.h" />
+    <ClInclude Include="NotificationServiceEventArgs.h" />
+    <ClInclude Include="NotificationSignals.h" />
+    <ClInclude Include="NotificationStructures.h" />
+    <ClInclude Include="NotificationWatcher.h" />
+    <ClInclude Include="TypeConversionHelpers.h" />
+  </ItemGroup>
+</Project>

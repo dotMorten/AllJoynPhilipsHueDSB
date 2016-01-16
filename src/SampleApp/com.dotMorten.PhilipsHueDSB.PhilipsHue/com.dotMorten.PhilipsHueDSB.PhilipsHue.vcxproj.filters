@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resources">
+      <UniqueIdentifier>7b2fbff0-d64c-426b-bbbc-b9c6c282812b</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tga;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="MainInterface">
+      <UniqueIdentifier>{06de22bb-0c2f-407a-a862-1ee8f6c448c1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="AllJoynBusObjectManager.cpp" />
+    <ClCompile Include="AllJoynHelpers.cpp" />
+    <ClCompile Include="PhilipsHueConsumer.cpp" />
+    <ClCompile Include="PhilipsHueProducer.cpp" />
+    <ClCompile Include="PhilipsHueServiceEventAdapter.cpp" />
+    <ClCompile Include="PhilipsHueServiceEventArgs.cpp" />
+    <ClCompile Include="PhilipsHueSignals.cpp" />
+    <ClCompile Include="PhilipsHueWatcher.cpp" />
+    <ClCompile Include="TypeConversionHelpers.cpp" />
+    <ClCompile Include="MainInterface\MainInterfaceConsumer.cpp">
+      <Filter>MainInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="MainInterface\MainInterfaceProducer.cpp">
+      <Filter>MainInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="MainInterface\MainInterfaceServiceEventAdapter.cpp">
+      <Filter>MainInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="MainInterface\MainInterfaceServiceEventArgs.cpp">
+      <Filter>MainInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="MainInterface\MainInterfaceSignals.cpp">
+      <Filter>MainInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="MainInterface\MainInterfaceWatcher.cpp">
+      <Filter>MainInterface</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="AllJoynBusObjectManager.h" />
+    <ClInclude Include="AllJoynHelpers.h" />
+    <ClInclude Include="IPhilipsHueService.h" />
+    <ClInclude Include="PhilipsHueConsumer.h" />
+    <ClInclude Include="PhilipsHueEventArgs.h" />
+    <ClInclude Include="PhilipsHueMethodResults.h" />
+    <ClInclude Include="PhilipsHueProducer.h" />
+    <ClInclude Include="PhilipsHueServiceEventAdapter.h" />
+    <ClInclude Include="PhilipsHueServiceEventArgs.h" />
+    <ClInclude Include="PhilipsHueSignals.h" />
+    <ClInclude Include="PhilipsHueStructures.h" />
+    <ClInclude Include="PhilipsHueWatcher.h" />
+    <ClInclude Include="TypeConversionHelpers.h" />
+    <ClInclude Include="MainInterface\MainInterfaceConsumer.h">
+      <Filter>MainInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="MainInterface\MainInterfaceEventArgs.h">
+      <Filter>MainInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="MainInterface\MainInterfaceMethodResults.h">
+      <Filter>MainInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="MainInterface\MainInterfaceProducer.h">
+      <Filter>MainInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="MainInterface\MainInterfaceServiceEventAdapter.h">
+      <Filter>MainInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="MainInterface\MainInterfaceServiceEventArgs.h">
+      <Filter>MainInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="MainInterface\MainInterfaceSignals.h">
+      <Filter>MainInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="MainInterface\MainInterfaceWatcher.h">
+      <Filter>MainInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="MainInterface\IMainInterfaceService.h">
+      <Filter>MainInterface</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
