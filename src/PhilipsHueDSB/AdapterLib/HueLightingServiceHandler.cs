@@ -35,6 +35,7 @@ namespace AdapterLib
     {
         private readonly Q42.HueApi.Light _light;
         private readonly Q42.HueApi.HueClient _client;
+        private const UInt32 StandbyPowerUsage_Milliwatts = 400;
 
         public HueLightingServiceHandler(Q42.HueApi.HueClient client, Q42.HueApi.Light light)
         {
@@ -63,72 +64,82 @@ namespace AdapterLib
             LampDetails_Model = 1;
             LampDetails_Type = (uint)AdapterLib.LsfEnums.DeviceType.TYPE_LAMP;
             LampDetails_VariableColorTemp = info.SupportsTemperature;
-            LampDetails_Version = 1;
             LampDetails_Wattage = info.Wattage;
         }
-        public bool LampDetails_Color
+        public bool LampDetails_Color { get; }
+
+        public uint LampDetails_ColorRenderingIndex { get; }
+
+        public bool LampDetails_Dimmable { get; }
+
+        public bool LampDetails_HasEffects { get; }
+
+        public uint LampDetails_IncandescentEquivalent { get; }
+
+        public uint LampDetails_LampBaseType { get; }
+
+        public uint LampDetails_LampBeamAngle { get; }
+
+        public string LampDetails_LampID { get; }
+
+        public uint LampDetails_LampType { get; }
+
+        public uint LampDetails_Make { get; }
+
+        public uint LampDetails_MaxLumens { get; }
+
+        public uint LampDetails_MaxTemperature { get; }
+
+        public uint LampDetails_MaxVoltage { get; }
+
+        public uint LampDetails_MinTemperature { get; }
+
+        public uint LampDetails_MinVoltage { get; }
+
+        public uint LampDetails_Model { get; }
+
+        public uint LampDetails_Type { get; }
+
+        public bool LampDetails_VariableColorTemp { get; }
+
+        public uint LampDetails_Version { get { return 1; } }
+
+        public uint LampDetails_Wattage { get; }
+
+        public uint LampParameters_BrightnessLumens
         {
-            get; private set;
+            get
+            {
+                if (LampState_OnOff == false)
+                    return 0;
+                return (UInt32)(LampDetails_MaxLumens * (LampState_Brightness / (double)UInt32.MaxValue));
+            }
         }
 
-        public uint LampDetails_ColorRenderingIndex { get; private set; }
+        public uint LampParameters_EnergyUsageMilliwatts { get {
+                if (!LampState_OnOff)
+                    return StandbyPowerUsage_Milliwatts;
+                //Assume linear power consumption based on brightness from minimum to maximum usage:
+                return (UInt32)((LampDetails_Wattage * 1000 - StandbyPowerUsage_Milliwatts) *
+                    (LampState_Brightness / (double)UInt32.MaxValue) + StandbyPowerUsage_Milliwatts);
+            } }
 
-        public bool LampDetails_Dimmable { get; private set; }
-
-        public bool LampDetails_HasEffects { get; private set; }
-
-        public uint LampDetails_IncandescentEquivalent { get; private set; }
-
-        public uint LampDetails_LampBaseType { get; private set; }
-
-        public uint LampDetails_LampBeamAngle { get; private set; }
-
-        public string LampDetails_LampID { get; private set; }
-
-        public uint LampDetails_LampType { get; private set; }
-
-        public uint LampDetails_Make { get; private set; }
-
-        public uint LampDetails_MaxLumens { get; private set; }
-
-        public uint LampDetails_MaxTemperature { get; private set; }
-
-        public uint LampDetails_MaxVoltage { get; private set; }
-
-        public uint LampDetails_MinTemperature { get; private set; }
-
-        public uint LampDetails_MinVoltage { get; private set; }
-
-        public uint LampDetails_Model { get; private set; }
-
-        public uint LampDetails_Type { get; private set; }
-
-        public bool LampDetails_VariableColorTemp { get; private set; }
-
-        public uint LampDetails_Version { get; private set; }
-
-        public uint LampDetails_Wattage { get; private set; }
-
-        public uint LampParameters_BrightnessLumens { get; private set; }
-
-        public uint LampParameters_EnergyUsageMilliwatts { get; private set; }
-
-        public uint LampParameters_Version { get; private set; }
+        public uint LampParameters_Version { get { return 1; } }
 
         public uint[] LampService_LampFaults { get; private set; }
 
-        public uint LampService_LampServiceVersion { get; private set; }
+        public uint LampService_LampServiceVersion { get { return 1; } }
 
-        public uint LampService_Version { get; private set; }
+        public uint LampService_Version { get { return 1; } }
 
         public uint LampState_Brightness
         {
             //1..254
-            get { return (uint)(_light.State.Brightness / 254d * (UInt32.MaxValue - 1)); }
+            get { return (uint)(_light.State.Brightness / 254d * UInt32.MaxValue); }
             set
             {
                 var command = new LightCommand();
-                command.Brightness = (byte)(value * 254d / (UInt32.MaxValue - 1));
+                command.Brightness = (byte)(value * 254d / UInt32.MaxValue);
                 _client.SendCommandAsync(command, new[] { _light.Id });
                 _light.State.Brightness = (byte)value;
             }
@@ -204,23 +215,19 @@ namespace AdapterLib
             get
             {
                 return _light.State.Saturation.HasValue ? (uint)
-                    (_light.State.Saturation.Value / 254d * (UInt32.MaxValue - 1))
-                    : 0;
+                    (_light.State.Saturation.Value / 254d * UInt32.MaxValue) : 0;
             }
 
             set
             {
                 var command = new LightCommand();
-                command.Saturation = (int)(value * 254d / (UInt32.MaxValue - 1));
+                command.Saturation = (int)(value * 254d / UInt32.MaxValue);
                 _client.SendCommandAsync(command, new[] { _light.Id });
                 _light.State.Saturation = (int)value;
             }
         }
 
-        public uint LampState_Version
-        {
-            get; private set;
-        }
+        public uint LampState_Version { get { return 1; } }
 
         public uint ClearLampFault(uint InLampFaultCode, out uint LampResponseCode, out uint OutLampFaultCode)
         {
@@ -234,7 +241,7 @@ namespace AdapterLib
         {
             LampResponseCode = 0;
             ApplyPulseEffectAsync(FromState, ToState, Period, Duration, NumPulses, Timestamp);
-            return 1; //TODO
+            return 0;
         }
 
         /// <summary>
@@ -270,6 +277,7 @@ namespace AdapterLib
                 command.Brightness = (byte)(NewState.Brightness.Value * 254d / (UInt32.MaxValue - 1));
             if (NewState.Hue.HasValue && LampDetails_Color)
                 command.Hue = (int)(NewState.Hue.Value * 65535d / UInt32.MaxValue);
+
             if (NewState.Saturation.HasValue && LampDetails_Color)
                 command.Saturation = (int)(NewState.Saturation.Value * 254d / (UInt32.MaxValue - 1));
             //Currently hue doesn't like setting color temp if the other parameters are also set.
@@ -284,6 +292,17 @@ namespace AdapterLib
             System.Threading.Tasks.Task.Delay(TimeSpan.FromMilliseconds(Timestamp)).ContinueWith(_ =>
             {
                 _client.SendCommandAsync(command, new[] { _light.Id });
+                //Update state
+                if(command.Hue.HasValue)
+                    _light.State.Hue = command.Hue.Value;
+                if (command.Brightness.HasValue)
+                    _light.State.Brightness = command.Brightness.Value;
+                if (command.Saturation.HasValue)
+                    _light.State.Saturation= command.Saturation.Value;
+                if (command.ColorTemperature.HasValue)
+                    _light.State.ColorTemperature = command.ColorTemperature.Value;
+                if (command.On.HasValue)
+                    _light.State.On = command.On.Value;
             });
             return 0; //TODO
         }
