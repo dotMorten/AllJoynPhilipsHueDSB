@@ -112,7 +112,7 @@ namespace AdapterLib
             {
                 if (LampState_OnOff == false)
                     return 0;
-                return (UInt32)(LampDetails_MaxLumens * (LampState_Brightness / (double)UInt32.MaxValue));
+                return (UInt32)(LampDetails_MaxLumens * (LampState_Brightness / (double)UInt32Max));
             }
         }
 
@@ -121,7 +121,7 @@ namespace AdapterLib
                     return StandbyPowerUsage_Milliwatts;
                 //Assume linear power consumption based on brightness from minimum to maximum usage:
                 return (UInt32)((LampDetails_Wattage * 1000 - StandbyPowerUsage_Milliwatts) *
-                    (LampState_Brightness / (double)UInt32.MaxValue) + StandbyPowerUsage_Milliwatts);
+                    (LampState_Brightness / (double)UInt32Max) + StandbyPowerUsage_Milliwatts);
             } }
 
         public uint LampParameters_Version { get { return 1; } }
@@ -132,33 +132,38 @@ namespace AdapterLib
 
         public uint LampService_Version { get { return 1; } }
 
+        /**< The lamp brightness (in percentage). 0 means 0. uint32_max-1 means 100%. */
         public uint LampState_Brightness
         {
             //1..254
-            get { return (uint)(_light.State.Brightness / 254d * UInt32.MaxValue); }
+            get { return (uint)(_light.State.Brightness / 254d * UInt32Max); }
             set
             {
                 var command = new LightCommand();
-                command.Brightness = (byte)(value * 254d / UInt32.MaxValue);
+                command.Brightness = (byte)(value * 254d / UInt32Max);
                 _client.SendCommandAsync(command, new[] { _light.Id });
                 _light.State.Brightness = (byte)value;
             }
         }
-
+        // The lamp color temperature (in Kelvin).
+        // 0 means 1000K. uint32_max-1 means 20000K.
+        private const UInt32 UInt32Max = UInt32.MaxValue - 1;
         public uint LampState_ColorTemp
         {
             get
             {
                 if (!_light.State.ColorTemperature.HasValue)
                     return 0;
-                var kelvin = 1000000d / (_light.State.ColorTemperature);// - 654.2222222222222) / -0.07711111111111111111111111111111;
-                return (uint)kelvin;
+                var kelvin = _light.State.ColorTemperature.Value / 1000000d; //Convert from Mired to Kelvin
+                return (uint)((kelvin - 1000d) / 19000d * UInt32Max); //Convert to 1000K..20000K range on UInt32 scale
             }
 
             set
             {
                 var command = new LightCommand();
-                int mired = (int)(1000000d / value);
+                double kelvin = value * 19000d / UInt32Max + 1000;
+                int kelvinLimited = (int)Math.Max(LampDetails_MinTemperature, Math.Min(LampDetails_MaxTemperature, kelvin));
+                int mired = (int)(1000000d / kelvin);
 
                 command.ColorTemperature = mired;
                 _client.SendCommandAsync(command, new[] { _light.Id });
@@ -166,18 +171,19 @@ namespace AdapterLib
             }
         }
 
+        // The lamp hue (in degree). 0 means 0. uint32_max-1 means 360. */
         public uint LampState_Hue
         {
             //0 .. 65535.
             get
             {
-                return _light.State.Hue.HasValue ? (uint)(_light.State.Hue.Value / 65535d * UInt32.MaxValue) : 0;
+                return _light.State.Hue.HasValue ? (uint)(_light.State.Hue.Value / 65535d * UInt32Max) : 0;
             }
 
             set
             {
                 var command = new LightCommand();
-                command.Hue = (int)(value * 65535d / UInt32.MaxValue);
+                command.Hue = (int)(value * 65535d / UInt32Max);
                 _client.SendCommandAsync(command, new[] { _light.Id });
                 _light.State.Hue = (int)value;
             }
@@ -209,19 +215,20 @@ namespace AdapterLib
             }
         }
 
+        // The lamp saturation (in percentage). 0 means 0. uint32_max-1 means 100% */
         public uint LampState_Saturation
         {
             //0=white, 254=fully saturated
             get
             {
                 return _light.State.Saturation.HasValue ? (uint)
-                    (_light.State.Saturation.Value / 254d * UInt32.MaxValue) : 0;
+                    (_light.State.Saturation.Value / 254d * UInt32Max) : 0;
             }
 
             set
             {
                 var command = new LightCommand();
-                command.Saturation = (int)(value * 254d / UInt32.MaxValue);
+                command.Saturation = (int)(value * 254d / UInt32Max);
                 _client.SendCommandAsync(command, new[] { _light.Id });
                 _light.State.Saturation = (int)value;
             }
@@ -274,20 +281,20 @@ namespace AdapterLib
             command.TransitionTime = TimeSpan.FromMilliseconds(TransitionPeriod);
             command.On = NewState.IsOn;
             if (NewState.Brightness.HasValue && LampDetails_Dimmable)
-                command.Brightness = (byte)(NewState.Brightness.Value * 254d / (UInt32.MaxValue - 1));
+                command.Brightness = (byte)(NewState.Brightness.Value * 254d / UInt32Max);
             if (NewState.Hue.HasValue && LampDetails_Color)
-                command.Hue = (int)(NewState.Hue.Value * 65535d / UInt32.MaxValue);
-
+                command.Hue = (int)(NewState.Hue.Value * 65535d / UInt32Max);
             if (NewState.Saturation.HasValue && LampDetails_Color)
-                command.Saturation = (int)(NewState.Saturation.Value * 254d / (UInt32.MaxValue - 1));
-            //Currently hue doesn't like setting color temp if the other parameters are also set.
-            //Skipping for now.
-            //if (NewState.ColorTemp.HasValue && LampDetails_VariableColorTemp)
-            //{
-            //    int kelvin = (int)Math.Max(LampDetails_MinTemperature, Math.Min(LampDetails_MaxTemperature, NewState.ColorTemp.Value));
-            //    UInt16 mired = (UInt16)(kelvin * -0.07711111111111111111111111111111 + 654.2222222222222);
-            //    command.ColorTemperature = mired;
-            //}
+                command.Saturation = (int)(NewState.Saturation.Value * 254d / UInt32Max);
+            if (NewState.ColorTemp.HasValue && LampDetails_VariableColorTemp)
+            {
+                double kelvin = NewState.ColorTemp.Value * 19000d / UInt32Max + 1000;
+                int kelvinLimited = (int)Math.Max(LampDetails_MinTemperature, Math.Min(LampDetails_MaxTemperature, kelvin));
+                int mired = (int)(1000000d / kelvinLimited);
+                //Currently hue doesn't like setting color temp if the other parameters are also set.
+                //Skipping for now.
+                //command.ColorTemperature = mired;
+            }
             LampResponseCode = 0;
             System.Threading.Tasks.Task.Delay(TimeSpan.FromMilliseconds(Timestamp)).ContinueWith(_ =>
             {
