@@ -1,4 +1,4 @@
-﻿//
+//
 // Copyright (c) 2015, Microsoft Corporation
 //
 // Permission to use, copy, modify, and/or distribute this software for any
@@ -14,30 +14,5 @@
 // IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 //
 
-#pragma once
-
-#include <collection.h>
-#include <exception>
-#include <string>
-#include <vector>
-#include <ppltasks.h>
-#include <algorithm>
-
-#define QCC_OS_GROUP_WINDOWS
-
-#include <alljoyn_c/Init.h>
-#include <alljoyn_c/dbusstddefines.h>
-#include <alljoyn_c/BusAttachment.h>
-#include <alljoyn_c/Session.h>
-#include <alljoyn_c/BusListener.h>
-#include <alljoyn_c/SessionPortListener.h>
-#include <alljoyn_c/InterfaceDescription.h>
-
-#include <windows.h>
-#include <tchar.h>
-
-#include "ControlPanel.h"
-#include "Widget.h"
-
-#define CHK_AJSTATUS(x) { status = (x); if ((ER_OK != status))  { goto leave; }}
-#define CHK_POINTER(x) {if ((nullptr == x)) { status = ER_OUT_OF_MEMORY; goto leave; }}
+#include "pch.h"
+#include "AdapterBridgeServiceImplementation.h"

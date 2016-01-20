@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdapterLib", "PhilipsHueDSB\AdapterLib\AdapterLib.csproj", "{5254F40C-CD4C-48F9-9C55-8040F071F1B4}"
 EndProject
@@ -12,6 +12,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Common", "PhilipsHueDSB\Common\Common.vcxproj", "{4D445253-3BBA-455D-B324-ECE00D4FE480}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeadedAdapterApp", "PhilipsHueDSB\HeadedAdapterApp\HeadedAdapterApp.csproj", "{31EB47F3-5810-4439-AB31-99559965C58B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BackgroundHost", "PhilipsHueDSB\BackgroundHost\BackgroundHost.vcxproj", "{98B5350D-3B67-4109-9CD5-1A675295C461}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -95,6 +97,18 @@ Global
 		{31EB47F3-5810-4439-AB31-99559965C58B}.Release|x86.ActiveCfg = Release|x86
 		{31EB47F3-5810-4439-AB31-99559965C58B}.Release|x86.Build.0 = Release|x86
 		{31EB47F3-5810-4439-AB31-99559965C58B}.Release|x86.Deploy.0 = Release|x86
+		{98B5350D-3B67-4109-9CD5-1A675295C461}.Debug|ARM.ActiveCfg = Debug|ARM
+		{98B5350D-3B67-4109-9CD5-1A675295C461}.Debug|ARM.Build.0 = Debug|ARM
+		{98B5350D-3B67-4109-9CD5-1A675295C461}.Debug|x64.ActiveCfg = Debug|x64
+		{98B5350D-3B67-4109-9CD5-1A675295C461}.Debug|x64.Build.0 = Debug|x64
+		{98B5350D-3B67-4109-9CD5-1A675295C461}.Debug|x86.ActiveCfg = Debug|Win32
+		{98B5350D-3B67-4109-9CD5-1A675295C461}.Debug|x86.Build.0 = Debug|Win32
+		{98B5350D-3B67-4109-9CD5-1A675295C461}.Release|ARM.ActiveCfg = Release|ARM
+		{98B5350D-3B67-4109-9CD5-1A675295C461}.Release|ARM.Build.0 = Release|ARM
+		{98B5350D-3B67-4109-9CD5-1A675295C461}.Release|x64.ActiveCfg = Release|x64
+		{98B5350D-3B67-4109-9CD5-1A675295C461}.Release|x64.Build.0 = Release|x64
+		{98B5350D-3B67-4109-9CD5-1A675295C461}.Release|x86.ActiveCfg = Release|Win32
+		{98B5350D-3B67-4109-9CD5-1A675295C461}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
